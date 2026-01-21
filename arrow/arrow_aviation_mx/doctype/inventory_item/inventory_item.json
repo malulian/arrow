@@ -1,0 +1,212 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:INV-{part_number}-{###}",
+    "creation": "2026-01-21 22:53:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "item_details_section",
+        "item_name",
+        "part_number",
+        "alternate_pn",
+        "column_break_details",
+        "status",
+        "tag",
+        "batch_number",
+        "section_break_quantity",
+        "quantity",
+        "unit",
+        "minimum_quantity",
+        "column_break_quantity",
+        "location",
+        "expiry_date",
+        "section_break_dates",
+        "last_received_date",
+        "last_withdrawal_date",
+        "section_break_notes",
+        "notes"
+    ],
+    "fields": [
+        {
+            "fieldname": "item_details_section",
+            "fieldtype": "Section Break",
+            "label": "Item Details"
+        },
+        {
+            "fieldname": "item_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Item Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "part_number",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Part Number (P/N)",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "alternate_pn",
+            "fieldtype": "Data",
+            "label": "Alternate P/N"
+        },
+        {
+            "fieldname": "column_break_details",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Active",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Status",
+            "options": "Active\nLow Stock\nOut of Stock\nExpired"
+        },
+        {
+            "fieldname": "tag",
+            "fieldtype": "Data",
+            "in_standard_filter": 1,
+            "label": "Tag"
+        },
+        {
+            "fieldname": "batch_number",
+            "fieldtype": "Data",
+            "label": "Batch Number"
+        },
+        {
+            "fieldname": "section_break_quantity",
+            "fieldtype": "Section Break",
+            "label": "Quantity & Location"
+        },
+        {
+            "default": "0",
+            "fieldname": "quantity",
+            "fieldtype": "Float",
+            "in_list_view": 1,
+            "label": "Quantity",
+            "reqd": 1
+        },
+        {
+            "default": "EA",
+            "fieldname": "unit",
+            "fieldtype": "Select",
+            "label": "Unit",
+            "options": "EA\nKG\nLT\nMT\nFT\nIN\nPCS\nSET\nBOX"
+        },
+        {
+            "default": "1",
+            "fieldname": "minimum_quantity",
+            "fieldtype": "Float",
+            "label": "Minimum Quantity"
+        },
+        {
+            "fieldname": "column_break_quantity",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "location",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Location"
+        },
+        {
+            "fieldname": "expiry_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Expiry Date"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_dates",
+            "fieldtype": "Section Break",
+            "label": "Transaction Dates"
+        },
+        {
+            "fieldname": "last_received_date",
+            "fieldtype": "Date",
+            "label": "Last Received Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "last_withdrawal_date",
+            "fieldtype": "Date",
+            "label": "Last Withdrawal Date",
+            "read_only": 1
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_notes",
+            "fieldtype": "Section Break",
+            "label": "Notes"
+        },
+        {
+            "fieldname": "notes",
+            "fieldtype": "Text",
+            "label": "Notes"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [
+        {
+            "link_doctype": "Inventory Transaction",
+            "link_fieldname": "inventory_item"
+        },
+        {
+            "link_doctype": "Purchase Order",
+            "link_fieldname": "linked_inventory_item"
+        }
+    ],
+    "modified": "2026-01-21 22:53:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Inventory Item",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "item_name,part_number,alternate_pn,location",
+    "show_name_in_global_search": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [
+        {
+            "color": "green",
+            "title": "Active"
+        },
+        {
+            "color": "orange",
+            "title": "Low Stock"
+        },
+        {
+            "color": "red",
+            "title": "Out of Stock"
+        },
+        {
+            "color": "gray",
+            "title": "Expired"
+        }
+    ],
+    "title_field": "item_name",
+    "track_changes": 1
+}

@@ -1,0 +1,117 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2026-01-21 22:53:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "supplier",
+        "supplier_name",
+        "is_approved_supplier",
+        "column_break_1",
+        "quote_amount",
+        "currency",
+        "column_break_2",
+        "quote_date",
+        "validity_days",
+        "section_break_selection",
+        "is_selected",
+        "section_break_attachment",
+        "attachment"
+    ],
+    "fields": [
+        {
+            "fieldname": "supplier",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Supplier",
+            "options": "Supplier",
+            "reqd": 1
+        },
+        {
+            "fetch_from": "supplier.supplier_name",
+            "fieldname": "supplier_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Supplier Name",
+            "read_only": 1
+        },
+        {
+            "fetch_from": "supplier.is_approved",
+            "fieldname": "is_approved_supplier",
+            "fieldtype": "Check",
+            "label": "Is Approved Supplier",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_1",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "quote_amount",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Quote Amount",
+            "reqd": 1
+        },
+        {
+            "default": "USD",
+            "fieldname": "currency",
+            "fieldtype": "Link",
+            "label": "Currency",
+            "options": "Currency"
+        },
+        {
+            "fieldname": "column_break_2",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Today",
+            "fieldname": "quote_date",
+            "fieldtype": "Date",
+            "label": "Quote Date"
+        },
+        {
+            "default": "30",
+            "fieldname": "validity_days",
+            "fieldtype": "Int",
+            "label": "Validity (Days)"
+        },
+        {
+            "fieldname": "section_break_selection",
+            "fieldtype": "Section Break"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_selected",
+            "fieldtype": "Check",
+            "in_list_view": 1,
+            "label": "Selected Quote"
+        },
+        {
+            "fieldname": "section_break_attachment",
+            "fieldtype": "Section Break",
+            "label": "Quote Document"
+        },
+        {
+            "fieldname": "attachment",
+            "fieldtype": "Attach",
+            "label": "Quote Attachment"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2026-01-21 22:53:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Price Quote",
+    "naming_rule": "Random",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}

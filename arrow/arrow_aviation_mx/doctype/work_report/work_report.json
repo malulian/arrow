@@ -1,0 +1,248 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:WR-{YYYY}-{#####}",
+    "creation": "2026-01-21 22:53:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "report_details_section",
+        "report_number",
+        "work_date",
+        "column_break_details",
+        "aircraft",
+        "technician",
+        "section_break_time",
+        "start_time",
+        "end_time",
+        "column_break_time",
+        "total_hours_display",
+        "total_hours",
+        "section_break_work_type",
+        "oxygen_fill",
+        "nitrogen_fill",
+        "tks_fill",
+        "column_break_work_type",
+        "hydraulic_oil_fill",
+        "gpu_usage",
+        "gpu_hours",
+        "column_break_work_type_2",
+        "wi_di",
+        "section_break_parts",
+        "parts_used",
+        "duplicate_parts_confirmed",
+        "section_break_notes",
+        "notes",
+        "section_break_signature",
+        "signature"
+    ],
+    "fields": [
+        {
+            "fieldname": "report_details_section",
+            "fieldtype": "Section Break",
+            "label": "Report Details"
+        },
+        {
+            "fieldname": "report_number",
+            "fieldtype": "Data",
+            "label": "Report Number",
+            "read_only": 1
+        },
+        {
+            "default": "Today",
+            "fieldname": "work_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Work Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_details",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "aircraft",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Aircraft",
+            "options": "\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP",
+            "reqd": 1
+        },
+        {
+            "default": "__user",
+            "fieldname": "technician",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Technician",
+            "options": "User",
+            "reqd": 1
+        },
+        {
+            "fieldname": "section_break_time",
+            "fieldtype": "Section Break",
+            "label": "Work Time"
+        },
+        {
+            "fieldname": "start_time",
+            "fieldtype": "Time",
+            "in_list_view": 1,
+            "label": "Start Time",
+            "reqd": 1
+        },
+        {
+            "fieldname": "end_time",
+            "fieldtype": "Time",
+            "in_list_view": 1,
+            "label": "End Time",
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_time",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "total_hours_display",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Total Time (HH:MM)",
+            "read_only": 1
+        },
+        {
+            "fieldname": "total_hours",
+            "fieldtype": "Float",
+            "hidden": 1,
+            "label": "Total Hours (Decimal)",
+            "precision": "2",
+            "read_only": 1
+        },
+        {
+            "fieldname": "section_break_work_type",
+            "fieldtype": "Section Break",
+            "label": "Work Type"
+        },
+        {
+            "default": "0",
+            "fieldname": "oxygen_fill",
+            "fieldtype": "Check",
+            "label": "מילוי חמצן (Oxygen Fill)"
+        },
+        {
+            "default": "0",
+            "fieldname": "nitrogen_fill",
+            "fieldtype": "Check",
+            "label": "מילוי חנקן (Nitrogen Fill)"
+        },
+        {
+            "default": "0",
+            "fieldname": "tks_fill",
+            "fieldtype": "Check",
+            "label": "מילוי TKS"
+        },
+        {
+            "fieldname": "column_break_work_type",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "0",
+            "fieldname": "hydraulic_oil_fill",
+            "fieldtype": "Check",
+            "label": "מילוי שמן הידראולי (Hydraulic Oil)"
+        },
+        {
+            "default": "0",
+            "fieldname": "gpu_usage",
+            "fieldtype": "Check",
+            "label": "GPU"
+        },
+        {
+            "depends_on": "eval:doc.gpu_usage",
+            "fieldname": "gpu_hours",
+            "fieldtype": "Float",
+            "label": "GPU Hours",
+            "precision": "2"
+        },
+        {
+            "fieldname": "column_break_work_type_2",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "0",
+            "fieldname": "wi_di",
+            "fieldtype": "Check",
+            "label": "WI/DI"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_parts",
+            "fieldtype": "Section Break",
+            "label": "Parts Used"
+        },
+        {
+            "fieldname": "parts_used",
+            "fieldtype": "Table",
+            "label": "Parts Used",
+            "options": "Work Report Part"
+        },
+        {
+            "default": "0",
+            "fieldname": "duplicate_parts_confirmed",
+            "fieldtype": "Check",
+            "hidden": 1,
+            "label": "Duplicate Parts Confirmed"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_notes",
+            "fieldtype": "Section Break",
+            "label": "Notes"
+        },
+        {
+            "fieldname": "notes",
+            "fieldtype": "Text Editor",
+            "label": "Work Notes"
+        },
+        {
+            "fieldname": "section_break_signature",
+            "fieldtype": "Section Break",
+            "label": "Technician Signature"
+        },
+        {
+            "fieldname": "signature",
+            "fieldtype": "Signature",
+            "label": "Signature"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-01-21 22:53:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Work Report",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "aircraft,technician,work_date",
+    "show_name_in_global_search": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "aircraft",
+    "track_changes": 1
+}

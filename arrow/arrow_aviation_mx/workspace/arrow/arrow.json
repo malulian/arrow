@@ -1,0 +1,86 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">\ud83c\udfed Arrow Aviation MX</span>\",\"col\":12}},{\"id\":\"ql_suppliers\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Suppliers\",\"col\":6}},{\"id\":\"ql_orders\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Purchase Orders\",\"col\":6}},{\"id\":\"ql_inventory\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inventory Items\",\"col\":6}},{\"id\":\"ql_reports\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Work Reports\",\"col\":6}}]",
+ "creation": "2026-01-21 23:10:03.009271",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "getting-started",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Arrow",
+ "links": [],
+ "modified": "2026-01-21 23:11:07.995539",
+ "modified_by": "Administrator",
+ "module": "Arrow Aviation MX",
+ "name": "Arrow",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Supplier",
+   "label": "Suppliers",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Purchase Order",
+   "label": "Purchase Orders",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Inventory Item",
+   "label": "Inventory Items",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Work Report",
+   "label": "Work Reports",
+   "quick_list_filter": "[]"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 0.0,
+ "shortcuts": [
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "New Supplier",
+   "link_to": "Supplier",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "New Purchase Order",
+   "link_to": "Purchase Order",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "New Inventory Item",
+   "link_to": "Inventory Item",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "",
+   "label": "New Work Report",
+   "link_to": "Work Report",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Inventory Transactions",
+   "link_to": "Inventory Transaction",
+   "type": "DocType"
+  }
+ ],
+ "title": "Arrow"
+}

@@ -1,0 +1,108 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2026-01-21 22:53:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "survey_date",
+        "surveyed_by",
+        "column_break_1",
+        "survey_result",
+        "section_break_findings",
+        "has_findings",
+        "findings",
+        "column_break_findings",
+        "findings_due_date",
+        "findings_resolved",
+        "section_break_attachment",
+        "attachment"
+    ],
+    "fields": [
+        {
+            "fieldname": "survey_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Survey Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "surveyed_by",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "label": "Surveyed By",
+            "options": "User"
+        },
+        {
+            "fieldname": "column_break_1",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Pass",
+            "fieldname": "survey_result",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Survey Result",
+            "options": "Pass\nFail\nConditional",
+            "reqd": 1
+        },
+        {
+            "fieldname": "section_break_findings",
+            "fieldtype": "Section Break",
+            "label": "Findings"
+        },
+        {
+            "default": "0",
+            "fieldname": "has_findings",
+            "fieldtype": "Check",
+            "label": "Has Findings"
+        },
+        {
+            "depends_on": "eval:doc.has_findings",
+            "fieldname": "findings",
+            "fieldtype": "Text",
+            "label": "Findings Details"
+        },
+        {
+            "fieldname": "column_break_findings",
+            "fieldtype": "Column Break"
+        },
+        {
+            "depends_on": "eval:doc.has_findings",
+            "fieldname": "findings_due_date",
+            "fieldtype": "Date",
+            "label": "Findings Due Date"
+        },
+        {
+            "default": "0",
+            "depends_on": "eval:doc.has_findings",
+            "fieldname": "findings_resolved",
+            "fieldtype": "Check",
+            "label": "Findings Resolved"
+        },
+        {
+            "fieldname": "section_break_attachment",
+            "fieldtype": "Section Break"
+        },
+        {
+            "fieldname": "attachment",
+            "fieldtype": "Attach",
+            "label": "Survey Document"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2026-01-21 22:53:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Supplier Survey",
+    "naming_rule": "Random",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}

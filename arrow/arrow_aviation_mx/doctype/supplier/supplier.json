@@ -1,0 +1,200 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:SUP-{supplier_name}-{####}",
+    "creation": "2026-01-21 22:53:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "supplier_details_section",
+        "supplier_name",
+        "supplier_code",
+        "is_approved",
+        "column_break_details",
+        "contact_person",
+        "phone",
+        "email",
+        "website",
+        "section_break_address",
+        "address",
+        "section_break_survey",
+        "is_surveyed",
+        "survey_interval_months",
+        "column_break_survey",
+        "last_survey_date",
+        "next_survey_date",
+        "section_break_survey_attachment",
+        "last_survey_attachment",
+        "section_break_survey_history",
+        "surveys",
+        "section_break_notes",
+        "notes"
+    ],
+    "fields": [
+        {
+            "fieldname": "supplier_details_section",
+            "fieldtype": "Section Break",
+            "label": "Supplier Details"
+        },
+        {
+            "fieldname": "supplier_name",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Supplier Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "supplier_code",
+            "fieldtype": "Data",
+            "label": "Supplier Code",
+            "read_only": 1,
+            "unique": 1
+        },
+        {
+            "default": "0",
+            "fieldname": "is_approved",
+            "fieldtype": "Check",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Is Approved Supplier"
+        },
+        {
+            "fieldname": "column_break_details",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "contact_person",
+            "fieldtype": "Data",
+            "label": "Contact Person"
+        },
+        {
+            "fieldname": "phone",
+            "fieldtype": "Data",
+            "label": "Phone",
+            "options": "Phone"
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "Data",
+            "label": "Email",
+            "options": "Email"
+        },
+        {
+            "fieldname": "website",
+            "fieldtype": "Data",
+            "label": "Website",
+            "options": "URL"
+        },
+        {
+            "fieldname": "section_break_address",
+            "fieldtype": "Section Break",
+            "label": "Address"
+        },
+        {
+            "fieldname": "address",
+            "fieldtype": "Small Text",
+            "label": "Address"
+        },
+        {
+            "fieldname": "section_break_survey",
+            "fieldtype": "Section Break",
+            "label": "Survey Information"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_surveyed",
+            "fieldtype": "Check",
+            "in_list_view": 1,
+            "label": "Has Been Surveyed"
+        },
+        {
+            "default": "12",
+            "fieldname": "survey_interval_months",
+            "fieldtype": "Int",
+            "label": "Survey Interval (Months)"
+        },
+        {
+            "fieldname": "column_break_survey",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "last_survey_date",
+            "fieldtype": "Date",
+            "label": "Last Survey Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "next_survey_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Next Survey Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "section_break_survey_attachment",
+            "fieldtype": "Section Break",
+            "label": "Last Survey Document"
+        },
+        {
+            "fieldname": "last_survey_attachment",
+            "fieldtype": "Attach",
+            "label": "Last Survey Attachment"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_survey_history",
+            "fieldtype": "Section Break",
+            "label": "Survey History"
+        },
+        {
+            "fieldname": "surveys",
+            "fieldtype": "Table",
+            "label": "Surveys",
+            "options": "Supplier Survey"
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_notes",
+            "fieldtype": "Section Break",
+            "label": "Notes"
+        },
+        {
+            "fieldname": "notes",
+            "fieldtype": "Text Editor",
+            "label": "Notes"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-01-21 22:53:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Supplier",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "supplier_name,contact_person,email",
+    "show_name_in_global_search": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "supplier_name",
+    "track_changes": 1
+}

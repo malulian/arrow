@@ -1,0 +1,71 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2026-01-21 23:15:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "section_break_1",
+        "run_check_button",
+        "section_break_results",
+        "results_html",
+        "section_break_info",
+        "last_run"
+    ],
+    "fields": [
+        {
+            "fieldname": "section_break_1",
+            "fieldtype": "Section Break",
+            "label": "Duplicate Check"
+        },
+        {
+            "fieldname": "run_check_button",
+            "fieldtype": "Button",
+            "label": "Run Duplicates Check"
+        },
+        {
+            "fieldname": "section_break_results",
+            "fieldtype": "Section Break",
+            "label": "Results"
+        },
+        {
+            "fieldname": "results_html",
+            "fieldtype": "HTML",
+            "label": "Results"
+        },
+        {
+            "fieldname": "section_break_info",
+            "fieldtype": "Section Break"
+        },
+        {
+            "fieldname": "last_run",
+            "fieldtype": "Datetime",
+            "label": "Last Run",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "issingle": 1,
+    "links": [],
+    "modified": "2026-01-21 23:15:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "Inventory Duplicates Check",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}
