@@ -136,25 +136,22 @@ class WorkReport(Document):
 		
 		for part in self.parts_used:
 			if part.part and part.quantity_used > 0:
-				try:
-					inv_item = frappe.get_doc('Inventory Item', part.part)
-					inv_item.quantity = (inv_item.quantity or 0) - part.quantity_used
-					inv_item.last_withdrawal_date = today()
-					inv_item.save(ignore_permissions=True)
-					
-					# Create transaction record
-					frappe.get_doc({
-						'doctype': 'Inventory Transaction',
-						'inventory_item': part.part,
-						'transaction_type': 'Withdraw',
-						'quantity': part.quantity_used,
-						'reference_doctype': 'Work Report',
-						'reference_name': self.name,
-						'notes': f'Used in Work Report {self.name} on aircraft {self.aircraft}'
-					}).insert(ignore_permissions=True)
-					
-				except Exception as e:
-					frappe.log_error(f"Failed to deduct part {part.part}: {str(e)}", "Work Report")
+				# Deduct from Inventory Item
+				inv_item = frappe.get_doc('Inventory Item', part.part)
+				inv_item.quantity = (inv_item.quantity or 0) - part.quantity_used
+				inv_item.last_withdrawal_date = today()
+				inv_item.save(ignore_permissions=True)
+				
+				# Create transaction record
+				frappe.get_doc({
+					'doctype': 'Inventory Transaction',
+					'inventory_item': part.part,
+					'transaction_type': 'Withdraw',
+					'quantity': part.quantity_used,
+					'reference_doctype': 'Work Report',
+					'reference_name': self.name,
+					'notes': f'Used in Work Report {self.name} on aircraft {self.aircraft}'
+				}).insert(ignore_permissions=True)
 	
 	def send_parts_notification(self):
 		"""Send email notification when parts are used"""
