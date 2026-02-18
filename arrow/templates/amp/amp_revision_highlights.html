@@ -1,0 +1,32 @@
+{# Revision Highlights Template #}
+<table class="revision-highlights-table">
+    <thead>
+        <tr>
+            <th style="width: 60%;">Description of Changes</th>
+            <th>By</th>
+            <th>Date</th>
+            <th>Rev No.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rev in revisions %}
+        {% if rev.highlights %}
+        <tr>
+            <td class="highlights-text">{{ rev.highlights }}</td>
+            <td class="text-center">{{ rev.author or "" }}</td>
+            <td class="text-center">{{ rev.revision_date_formatted or "" }}</td>
+            <td class="text-center">{{ rev.revision_number }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {# Empty rows #}
+        {% for i in range(empty_rows) %}
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

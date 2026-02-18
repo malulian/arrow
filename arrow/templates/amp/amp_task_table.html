@@ -1,0 +1,47 @@
+{# Standard Inspection Task Table Template #}
+{# Used for Inspection A-G, Structural, Out of Phase, Engine inspections, etc. #}
+<table class="task-table">
+    <thead>
+        <tr>
+            <th>TASK No.</th>
+            <th>ATA</th>
+            <th>TASK DESCRIPTION</th>
+            <th>ZONE</th>
+            <th>ACCESS</th>
+            <th>MANHOURS</th>
+            <th>MEC/INSP</th>
+            <th>REFERENCE</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td class="task-number">{{ task.task_number or "" }}</td>
+            <td class="ata">{{ task.ata_chapter or "" }}</td>
+            <td class="task-desc">{{ task.task_description or "" }}</td>
+            <td class="zone">{{ task.zone or "" }}</td>
+            <td class="access">{{ task.access or "" }}</td>
+            <td class="manhours">{{ task.manhours or "" }}</td>
+            <td class="performed-by">{{ task.performed_by or "" }}</td>
+            <td class="reference">{{ task.reference or "" }}</td>
+        </tr>
+        {# Inject task notes if any #}
+        {% if task.task_number and task_notes.get(task.task_number) %}
+        <tr>
+            <td colspan="8" style="padding: 0;">
+                {% for note in task_notes[task.task_number] %}
+                <div class="task-note">
+                    <div class="task-note-header">NOTE: {{ note.note_title }}</div>
+                    <div class="task-note-meta">
+                        {{ note.aircraft_registration }} | {{ note.status }}
+                        {% if note.added_by_revision %} | Rev {{ note.added_by_revision }}{% endif %}
+                    </div>
+                    <div class="task-note-content">{{ note.note_content or "" }}</div>
+                </div>
+                {% endfor %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

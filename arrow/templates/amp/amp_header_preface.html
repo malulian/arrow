@@ -1,0 +1,17 @@
+{# Preface Header — Green shaded, used for Introduction section pages #}
+<table class="header-preface">
+    <tr class="header-title-row">
+        <td colspan="4">AIRCRAFT MAINTENANCE PROGRAM</td>
+        <td class="header-logo" rowspan="2">
+            {% if logo_base64 %}
+            <img src="{{ logo_base64 }}" alt="Logo">
+            {% endif %}
+        </td>
+    </tr>
+    <tr class="header-detail-row">
+        <td>{{ section_title }}</td>
+        <td>{{ doc.aircraft_type }}</td>
+        <td>{{ registration_list }}</td>
+        <td>{{ serial_number_list }}</td>
+    </tr>
+</table>

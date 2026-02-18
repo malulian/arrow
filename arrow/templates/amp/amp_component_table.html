@@ -1,0 +1,23 @@
+{# Component Requirements Table Template #}
+<table class="component-table">
+    <thead>
+        <tr>
+            <th>COMPONENT</th>
+            <th>PART No</th>
+            <th>MANUFACTURER</th>
+            <th>PERIOD</th>
+            <th>ACTION</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.task_description or "" }}</td>
+            <td class="text-center">{{ task.task_number or "" }}</td>
+            <td class="text-center">{{ task.reference or "" }}</td>
+            <td class="text-center">{{ task.interval_text or task.interval_hours or "" }}</td>
+            <td>{{ task.access or "" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

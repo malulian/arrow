@@ -1,0 +1,153 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:AMP-REV-{revision_number}-{####}",
+    "creation": "2026-02-18 00:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "revision_info_section",
+        "amp_document",
+        "revision_number",
+        "revision_type",
+        "column_break_dates",
+        "revision_date",
+        "author",
+        "section_break_status",
+        "status",
+        "approved_by",
+        "approval_date",
+        "section_break_highlights",
+        "highlights",
+        "section_break_chapters",
+        "affected_chapters"
+    ],
+    "fields": [
+        {
+            "fieldname": "revision_info_section",
+            "fieldtype": "Section Break",
+            "label": "Revision Information"
+        },
+        {
+            "fieldname": "amp_document",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "AMP Document",
+            "options": "AMP Document",
+            "reqd": 1
+        },
+        {
+            "fieldname": "revision_number",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Revision Number",
+            "reqd": 1
+        },
+        {
+            "default": "Regular",
+            "fieldname": "revision_type",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Revision Type",
+            "options": "Regular\nTemporary",
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_dates",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Today",
+            "fieldname": "revision_date",
+            "fieldtype": "Date",
+            "in_list_view": 1,
+            "label": "Revision Date",
+            "reqd": 1
+        },
+        {
+            "fieldname": "author",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Author"
+        },
+        {
+            "fieldname": "section_break_status",
+            "fieldtype": "Section Break",
+            "label": "Status & Approval"
+        },
+        {
+            "default": "Draft",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Status",
+            "options": "Draft\nUnder Review\nApproved"
+        },
+        {
+            "fieldname": "approved_by",
+            "fieldtype": "Data",
+            "label": "Approved By"
+        },
+        {
+            "fieldname": "approval_date",
+            "fieldtype": "Date",
+            "label": "Approval Date"
+        },
+        {
+            "fieldname": "section_break_highlights",
+            "fieldtype": "Section Break",
+            "label": "Revision Highlights"
+        },
+        {
+            "fieldname": "highlights",
+            "fieldtype": "Long Text",
+            "label": "Highlights"
+        },
+        {
+            "fieldname": "section_break_chapters",
+            "fieldtype": "Section Break",
+            "label": "Affected Chapters"
+        },
+        {
+            "fieldname": "affected_chapters",
+            "fieldtype": "Table",
+            "label": "Affected Chapters",
+            "options": "AMP Revision Chapter"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2026-02-18 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "AMP Revision",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "revision_number,amp_document,author",
+    "show_name_in_global_search": 1,
+    "sort_field": "revision_date",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "revision_number",
+    "track_changes": 1
+}

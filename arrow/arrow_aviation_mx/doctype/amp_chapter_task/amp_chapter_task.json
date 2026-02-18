@@ -1,0 +1,144 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2026-02-18 00:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "task_number",
+        "ata_chapter",
+        "task_description",
+        "zone",
+        "access",
+        "column_break_intervals",
+        "interval_hours",
+        "interval_months",
+        "interval_cycles",
+        "interval_text",
+        "column_break_details",
+        "manhours",
+        "performed_by",
+        "reference",
+        "is_rii",
+        "applicability",
+        "lump_interval",
+        "sort_order"
+    ],
+    "fields": [
+        {
+            "fieldname": "task_number",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Task Number"
+        },
+        {
+            "fieldname": "ata_chapter",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "ATA Chapter"
+        },
+        {
+            "fieldname": "task_description",
+            "fieldtype": "Long Text",
+            "in_list_view": 1,
+            "label": "Task Description",
+            "reqd": 1
+        },
+        {
+            "fieldname": "zone",
+            "fieldtype": "Data",
+            "label": "Zone"
+        },
+        {
+            "fieldname": "access",
+            "fieldtype": "Data",
+            "label": "Access"
+        },
+        {
+            "fieldname": "column_break_intervals",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "interval_hours",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Interval (Hours)"
+        },
+        {
+            "fieldname": "interval_months",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Interval (Months)"
+        },
+        {
+            "fieldname": "interval_cycles",
+            "fieldtype": "Data",
+            "label": "Interval (Cycles)"
+        },
+        {
+            "fieldname": "interval_text",
+            "fieldtype": "Data",
+            "label": "Interval (Text)"
+        },
+        {
+            "fieldname": "column_break_details",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "manhours",
+            "fieldtype": "Float",
+            "in_list_view": 1,
+            "label": "Manhours"
+        },
+        {
+            "default": "MEC",
+            "fieldname": "performed_by",
+            "fieldtype": "Select",
+            "label": "Performed By",
+            "options": "MEC\nINSP\nMEC+INSP"
+        },
+        {
+            "fieldname": "reference",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Reference"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_rii",
+            "fieldtype": "Check",
+            "label": "Required Inspection Item (RII)"
+        },
+        {
+            "default": "ALL",
+            "fieldname": "applicability",
+            "fieldtype": "Data",
+            "label": "Applicability"
+        },
+        {
+            "fieldname": "lump_interval",
+            "fieldtype": "Data",
+            "label": "LUMP Interval"
+        },
+        {
+            "fieldname": "sort_order",
+            "fieldtype": "Int",
+            "label": "Sort Order"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2026-02-18 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "AMP Chapter Task",
+    "naming_rule": "Random",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+}

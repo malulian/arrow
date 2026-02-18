@@ -1,0 +1,30 @@
+{# Record of Revisions Template #}
+<table class="revision-record-table">
+    <thead>
+        <tr>
+            <th>Entered By</th>
+            <th>Date Entered</th>
+            <th>Issue Date</th>
+            <th>Rev. No.</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rev in revisions %}
+        <tr>
+            <td>{{ rev.author or "" }}</td>
+            <td>{{ rev.approval_date_formatted or rev.revision_date_formatted or "" }}</td>
+            <td>{{ rev.revision_date_formatted or "" }}</td>
+            <td>{{ rev.revision_number }}</td>
+        </tr>
+        {% endfor %}
+        {# Empty rows for future entries #}
+        {% for i in range(empty_rows) %}
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,249 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:AMP-{aircraft_type}-{####}",
+    "creation": "2026-02-18 00:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "document_info_section",
+        "aircraft_type",
+        "document_number",
+        "status",
+        "column_break_info",
+        "operator_name",
+        "operator_address",
+        "logo",
+        "section_break_engine",
+        "engine_type",
+        "engine_part_no",
+        "column_break_apu",
+        "apu_type",
+        "apu_part_no",
+        "section_break_utilization",
+        "annual_utilization",
+        "lump_threshold",
+        "section_break_revision",
+        "current_revision",
+        "current_revision_date",
+        "column_break_approval",
+        "approved_by",
+        "approval_date",
+        "section_break_caai",
+        "caai_approval_page",
+        "section_break_registrations",
+        "registrations",
+        "section_break_references",
+        "manufacturer_references"
+    ],
+    "fields": [
+        {
+            "fieldname": "document_info_section",
+            "fieldtype": "Section Break",
+            "label": "Document Information"
+        },
+        {
+            "fieldname": "aircraft_type",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Aircraft Type",
+            "reqd": 1
+        },
+        {
+            "fieldname": "document_number",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Document Number",
+            "unique": 1
+        },
+        {
+            "default": "Draft",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Status",
+            "options": "Draft\nUnder Review\nApproved"
+        },
+        {
+            "fieldname": "column_break_info",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Arrow Aviation",
+            "fieldname": "operator_name",
+            "fieldtype": "Data",
+            "label": "Operator Name",
+            "reqd": 1
+        },
+        {
+            "fieldname": "operator_address",
+            "fieldtype": "Small Text",
+            "label": "Operator Address"
+        },
+        {
+            "fieldname": "logo",
+            "fieldtype": "Attach Image",
+            "label": "Company Logo"
+        },
+        {
+            "fieldname": "section_break_engine",
+            "fieldtype": "Section Break",
+            "label": "Engine & APU"
+        },
+        {
+            "fieldname": "engine_type",
+            "fieldtype": "Data",
+            "label": "Engine Type"
+        },
+        {
+            "fieldname": "engine_part_no",
+            "fieldtype": "Data",
+            "label": "Engine Part No."
+        },
+        {
+            "fieldname": "column_break_apu",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "apu_type",
+            "fieldtype": "Data",
+            "label": "APU Type"
+        },
+        {
+            "fieldname": "apu_part_no",
+            "fieldtype": "Data",
+            "label": "APU Part No."
+        },
+        {
+            "fieldname": "section_break_utilization",
+            "fieldtype": "Section Break",
+            "label": "Utilization"
+        },
+        {
+            "default": "300",
+            "fieldname": "annual_utilization",
+            "fieldtype": "Int",
+            "label": "Annual Utilization (FH/year)"
+        },
+        {
+            "default": "200",
+            "fieldname": "lump_threshold",
+            "fieldtype": "Int",
+            "label": "LUMP Threshold (FH)"
+        },
+        {
+            "fieldname": "section_break_revision",
+            "fieldtype": "Section Break",
+            "label": "Current Revision"
+        },
+        {
+            "fieldname": "current_revision",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Current Revision",
+            "read_only": 1
+        },
+        {
+            "fieldname": "current_revision_date",
+            "fieldtype": "Date",
+            "label": "Current Revision Date",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_approval",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "approved_by",
+            "fieldtype": "Data",
+            "label": "Approved By"
+        },
+        {
+            "fieldname": "approval_date",
+            "fieldtype": "Date",
+            "label": "Approval Date"
+        },
+        {
+            "fieldname": "section_break_caai",
+            "fieldtype": "Section Break",
+            "label": "CAAI Approval Page"
+        },
+        {
+            "description": "Upload the CAAI approval form (AWF-1.1.336A) as PDF or image. Will be prepended to the generated AMP document.",
+            "fieldname": "caai_approval_page",
+            "fieldtype": "Attach",
+            "label": "CAAI Approval Page"
+        },
+        {
+            "fieldname": "section_break_registrations",
+            "fieldtype": "Section Break",
+            "label": "Aircraft Registrations"
+        },
+        {
+            "fieldname": "registrations",
+            "fieldtype": "Table",
+            "label": "Registrations",
+            "options": "AMP Aircraft Registration",
+            "reqd": 1
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "section_break_references",
+            "fieldtype": "Section Break",
+            "label": "Manufacturer References"
+        },
+        {
+            "fieldname": "manufacturer_references",
+            "fieldtype": "Table",
+            "label": "Manufacturer References",
+            "options": "AMP Manufacturer Reference"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [
+        {
+            "link_doctype": "AMP Chapter",
+            "link_fieldname": "amp_document"
+        },
+        {
+            "link_doctype": "AMP Revision",
+            "link_fieldname": "amp_document"
+        },
+        {
+            "link_doctype": "AMP Task Note",
+            "link_fieldname": "amp_document"
+        }
+    ],
+    "modified": "2026-02-18 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "AMP Document",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "aircraft_type,document_number,operator_name",
+    "show_name_in_global_search": 1,
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "title_field": "document_number",
+    "track_changes": 1
+}

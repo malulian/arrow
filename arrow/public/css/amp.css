@@ -1,0 +1,118 @@
+/* AMP Module UI Styles — Arrow Aviation MX */
+
+/* ===== AMP Document Form ===== */
+[data-doctype="AMP Document"] .indicator-pill.green {
+	background-color: #E2EFD9;
+	color: #2E5B2E;
+}
+
+/* ===== Chapter List in AMP Document ===== */
+.amp-chapter-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 10px;
+	padding: 10px 0;
+}
+
+.amp-chapter-card {
+	border: 1px solid #d1d8dd;
+	border-radius: 6px;
+	padding: 12px;
+	cursor: pointer;
+	transition: box-shadow 0.2s;
+}
+
+.amp-chapter-card:hover {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.amp-chapter-card .chapter-number {
+	font-size: 11px;
+	color: #8d99a6;
+	font-weight: 600;
+}
+
+.amp-chapter-card .chapter-title {
+	font-size: 13px;
+	font-weight: 500;
+	margin-top: 4px;
+}
+
+.amp-chapter-card .chapter-meta {
+	font-size: 11px;
+	color: #8d99a6;
+	margin-top: 6px;
+}
+
+.amp-chapter-card.section-intro {
+	border-left: 3px solid #2E5B2E;
+}
+
+.amp-chapter-card.section-report {
+	border-left: 3px solid #1862A8;
+}
+
+.amp-chapter-card.has-notes {
+	background-color: #FFF8E1;
+}
+
+/* ===== Revision Status Badges ===== */
+.amp-revision-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 500;
+}
+
+.amp-revision-badge.draft {
+	background-color: #FEE2E2;
+	color: #991B1B;
+}
+
+.amp-revision-badge.review {
+	background-color: #FEF3C7;
+	color: #92400E;
+}
+
+.amp-revision-badge.approved {
+	background-color: #D1FAE5;
+	color: #065F46;
+}
+
+/* ===== Task Table Styling in Desk ===== */
+[data-doctype="AMP Chapter"] .frappe-control[data-fieldname="chapter_tasks"] .rows {
+	font-size: 12px;
+}
+
+[data-doctype="AMP Chapter"] .frappe-control[data-fieldname="chapter_tasks"] .grid-heading-row {
+	background-color: #f0f4f7;
+}
+
+/* ===== Task Note Visual Distinction ===== */
+[data-doctype="AMP Task Note"] .form-layout {
+	border-left: 4px solid #FFA500;
+}
+
+/* ===== AMP Document Dashboard Indicators ===== */
+.amp-dashboard-stats {
+	display: flex;
+	gap: 20px;
+	padding: 10px 0;
+}
+
+.amp-stat {
+	text-align: center;
+}
+
+.amp-stat .stat-value {
+	font-size: 24px;
+	font-weight: 600;
+	color: #333;
+}
+
+.amp-stat .stat-label {
+	font-size: 11px;
+	color: #8d99a6;
+	text-transform: uppercase;
+}
