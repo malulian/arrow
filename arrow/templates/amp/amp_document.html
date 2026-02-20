@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ doc.document_number }} — Aircraft Maintenance Program</title>
+    <style>
+        {{ css }}
+    </style>
+</head>
+<body>
+
+{# ===== RUNNING FOOTER ELEMENTS (positioned by CSS) ===== #}
+<div class="footer-left">
+    AMP {{ doc.aircraft_type }} - {{ doc.operator_name }}<br>
+    {{ revision_date_formatted }}
+</div>
+<div class="footer-center">
+    <span class="page-number"></span>
+</div>
+<div class="footer-right">
+    {% if latest_revision and latest_revision.revision_type == "Temporary" %}
+    Temporary Revision {{ doc.current_revision or "0" }}
+    {% else %}
+    Revision {{ doc.current_revision or "0" }}
+    {% endif %}
+</div>
+
+{# ===== FRONT PAGE ===== #}
+<div class="front-page">
+    {% if logo_base64 %}
+    <div class="front-logo">
+        <img src="{{ logo_base64 }}" alt="Company Logo">
+    </div>
+    {% endif %}
+
+    <div class="doc-title">AIRCRAFT MAINTENANCE PROGRAM</div>
+
+    <div class="aircraft-type">{{ doc.aircraft_type }}</div>
+
+    <div class="registrations-box">
+        <h3>Aircraft Registrations</h3>
+        <table class="reg-table">
+            <thead>
+                <tr>
+                    <th>Registration</th>
+                    <th>Serial Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in doc.registrations %}
+                {% if reg.active %}
+                <tr>
+                    <td>{{ reg.registration }}</td>
+                    <td>{{ reg.serial_number }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="operator-info">
+        <strong>{{ doc.operator_name }}</strong>
+        {% if doc.operator_address %}
+        <br>{{ doc.operator_address }}
+        {% endif %}
+    </div>
+
+    <div class="document-info">
+        <p>Document Number: {{ doc.document_number }}</p>
+        {% if doc.current_revision %}
+        <p>Revision {{ doc.current_revision }} — {{ revision_date_formatted }}</p>
+        {% endif %}
+    </div>
+</div>
+
+{# ===== TABLE OF CONTENTS ===== #}
+<div class="chapter-break">
+    {% include_raw "amp_header_preface_rendered" %}
+    <h2 class="text-center">TABLE OF CONTENTS</h2>
+    <div class="toc-container">
+        {% if intro_chapters %}
+        <div class="toc-section-header">INTRODUCTION</div>
+        {% for chapter in intro_chapters %}
+        <div class="toc-entry">
+            <span class="toc-title">{{ chapter.title }}</span>
+            <span class="toc-pages">{{ chapter.chapter_number }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if report_chapters %}
+        <div class="toc-section-header">PROGRAM REPORT</div>
+        {% for chapter in report_chapters %}
+        <div class="toc-entry">
+            <span class="toc-title">{{ chapter.title }}</span>
+            <span class="toc-pages">{{ chapter.chapter_number }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{# ===== LIST OF EFFECTIVE PAGES ===== #}
+<div class="chapter-break">
+    {% include_raw "amp_header_preface_rendered" %}
+    <h2 class="text-center">LIST OF EFFECTIVE PAGES</h2>
+    <div class="lep-container">
+        <table class="lep-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Chapter</th>
+                    <th>Rev</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in lep_entries %}
+                <tr>
+                    <td>{{ entry.title }}</td>
+                    <td class="text-center">{{ entry.chapter_number }}</td>
+                    <td class="text-center">{{ entry.revision or "0" }}</td>
+                    <td class="text-center">{{ entry.revision_date_formatted or "" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# ===== RECORD OF REVISIONS ===== #}
+<div class="chapter-break">
+    {% include_raw "amp_header_preface_rendered" %}
+    <h2 class="text-center">RECORD OF REVISIONS</h2>
+    <table class="revision-record-table">
+        <thead>
+            <tr>
+                <th>Entered By</th>
+                <th>Date Entered</th>
+                <th>Issue Date</th>
+                <th>Rev. No.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rev in regular_revisions %}
+            <tr>
+                <td>{{ rev.author or "" }}</td>
+                <td>{{ rev.approval_date_formatted or rev.revision_date_formatted or "" }}</td>
+                <td>{{ rev.revision_date_formatted or "" }}</td>
+                <td>{{ rev.revision_number }}</td>
+            </tr>
+            {% endfor %}
+            {% for i in range(20 - regular_revisions|length) %}
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{# ===== RECORD OF TEMPORARY REVISIONS ===== #}
+<div class="chapter-break">
+    {% include_raw "amp_header_preface_rendered" %}
+    <h2 class="text-center">RECORD OF TEMPORARY REVISIONS</h2>
+    <table class="revision-record-table">
+        <thead>
+            <tr>
+                <th>Entered By</th>
+                <th>Date Entered</th>
+                <th>Issue Date</th>
+                <th>Rev. No.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rev in temporary_revisions %}
+            <tr>
+                <td>{{ rev.author or "" }}</td>
+                <td>{{ rev.approval_date_formatted or rev.revision_date_formatted or "" }}</td>
+                <td>{{ rev.revision_date_formatted or "" }}</td>
+                <td>{{ rev.revision_number }}</td>
+            </tr>
+            {% endfor %}
+            {% for i in range(20 - temporary_revisions|length) %}
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{# ===== REVISION HIGHLIGHTS ===== #}
+<div class="chapter-break">
+    {% include_raw "amp_header_preface_rendered" %}
+    <h2 class="text-center">REVISION HIGHLIGHTS</h2>
+    <table class="revision-highlights-table">
+        <thead>
+            <tr>
+                <th style="width: 60%;">Description of Changes</th>
+                <th>By</th>
+                <th>Date</th>
+                <th>Rev No.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rev in all_revisions_with_highlights %}
+            <tr>
+                <td class="highlights-text">{{ rev.highlights }}</td>
+                <td class="text-center">{{ rev.author or "" }}</td>
+                <td class="text-center">{{ rev.revision_date_formatted or "" }}</td>
+                <td class="text-center">{{ rev.revision_number }}</td>
+            </tr>
+            {% endfor %}
+            {% for i in range(10 - all_revisions_with_highlights|length) %}
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{# ===== CHAPTERS ===== #}
+{% for chapter in all_chapters %}
+<div class="chapter-break">
+    {# Header based on chapter type #}
+    {% if chapter.header_style == "Preface" %}
+    <table class="header-preface">
+        <tr class="header-title-row">
+            <td colspan="4">AIRCRAFT MAINTENANCE PROGRAM</td>
+            <td class="header-logo" rowspan="2">
+                {% if logo_base64 %}
+                <img src="{{ logo_base64 }}" alt="Logo">
+                {% endif %}
+            </td>
+        </tr>
+        <tr class="header-detail-row">
+            <td>{{ chapter.title|upper }}</td>
+            <td>{{ doc.aircraft_type }}</td>
+            <td>{{ registration_list }}</td>
+            <td>{{ serial_number_list }}</td>
+        </tr>
+    </table>
+    {% else %}
+    <table class="header-report">
+        <tr>
+            <td class="section-title">{{ chapter.title|upper }}</td>
+            <td>{{ doc.aircraft_type }}</td>
+            <td>{{ serial_number_list }}</td>
+            <td>{{ registration_list }}</td>
+        </tr>
+    </table>
+    {% endif %}
+
+    {# Chapter content based on content_type #}
+    {% if chapter.content_type == "Rich Text" %}
+    <div class="rich-content">
+        {{ chapter.content or "" }}
+    </div>
+
+    {% elif chapter.content_type == "Task Table" %}
+    <table class="task-table">
+        <thead>
+            <tr>
+                <th>TASK No.</th>
+                <th>ATA</th>
+                <th>TASK DESCRIPTION</th>
+                <th>ZONE</th>
+                <th>ACCESS</th>
+                <th>MANHOURS</th>
+                <th>MEC/INSP</th>
+                <th>REFERENCE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in chapter.chapter_tasks %}
+            <tr>
+                <td class="task-number">{{ task.task_number or "" }}</td>
+                <td class="ata">{{ task.ata_chapter or "" }}</td>
+                <td class="task-desc">{{ task.task_description or "" }}</td>
+                <td class="zone">{{ task.zone or "" }}</td>
+                <td class="access">{{ task.access or "" }}</td>
+                <td class="manhours">{{ task.manhours or "" }}</td>
+                <td class="performed-by">{{ task.performed_by or "" }}</td>
+                <td class="reference">{{ task.reference or "" }}</td>
+            </tr>
+            {% if task.task_number and chapter_task_notes.get(chapter.name, {}).get(task.task_number) %}
+            <tr>
+                <td colspan="8" style="padding: 0;">
+                    {% for note in chapter_task_notes[chapter.name][task.task_number] %}
+                    <div class="task-note">
+                        <div class="task-note-header">NOTE: {{ note.note_title }}</div>
+                        <div class="task-note-meta">{{ note.aircraft_registration }} | {{ note.status }}</div>
+                        <div class="task-note-content">{{ note.note_content or "" }}</div>
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif chapter.content_type == "Component Table" %}
+    <table class="component-table">
+        <thead>
+            <tr>
+                <th>COMPONENT</th>
+                <th>PART No</th>
+                <th>MANUFACTURER</th>
+                <th>PERIOD</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in chapter.chapter_tasks %}
+            <tr>
+                <td>{{ task.task_description or "" }}</td>
+                <td class="text-center">{{ task.task_number or "" }}</td>
+                <td class="text-center">{{ task.reference or "" }}</td>
+                <td class="text-center">{{ task.interval_text or task.interval_hours or "" }}</td>
+                <td>{{ task.access or "" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif chapter.content_type == "Checklist" %}
+    <table class="checklist-table">
+        <thead>
+            <tr>
+                <th style="width: 70%;">ITEM</th>
+                <th style="width: 30%;">ACTION / CHECK</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set current_zone = namespace(value="") %}
+            {% for task in chapter.chapter_tasks %}
+            {% if task.zone and task.zone != current_zone.value %}
+            {% set current_zone.value = task.zone %}
+            <tr>
+                <td colspan="2" class="checklist-zone-header">{{ task.zone }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td>{{ task.task_description or "" }}</td>
+                <td class="text-center">{{ task.access or "CHECK" }}</td>
+            </tr>
+            {% if task.task_number and chapter_task_notes.get(chapter.name, {}).get(task.task_number) %}
+            <tr>
+                <td colspan="2" style="padding: 0;">
+                    {% for note in chapter_task_notes[chapter.name][task.task_number] %}
+                    <div class="task-note">
+                        <div class="task-note-header">NOTE: {{ note.note_title }}</div>
+                        <div class="task-note-content">{{ note.note_content or "" }}</div>
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif chapter.content_type == "Custom HTML" %}
+    {{ chapter.custom_html or "" }}
+
+    {% endif %}
+</div>
+{% endfor %}
+
+</body>
+</html>

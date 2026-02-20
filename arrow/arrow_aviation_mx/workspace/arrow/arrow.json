@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">\ud83c\udfed Arrow Aviation MX</span>\",\"col\":12}},{\"id\":\"ql_suppliers\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Suppliers\",\"col\":6}},{\"id\":\"ql_orders\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Purchase Orders\",\"col\":6}},{\"id\":\"ql_inventory\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inventory Items\",\"col\":6}},{\"id\":\"ql_reports\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Work Reports\",\"col\":6}}]",
+ "content": "[{\"id\":\"header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">\ud83c\udfed Arrow Aviation MX</span>\",\"col\":12}},{\"id\":\"ql_suppliers\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Suppliers\",\"col\":6}},{\"id\":\"ql_orders\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Purchase Orders\",\"col\":6}},{\"id\":\"ql_inventory\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inventory Items\",\"col\":6}},{\"id\":\"ql_reports\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Work Reports\",\"col\":6}},{\"id\":\"header_amp\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Aircraft Maintenance Program</span>\",\"col\":12}},{\"id\":\"ql_amp_docs\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"AMP Documents\",\"col\":6}},{\"id\":\"ql_amp_chapters\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"AMP Chapters\",\"col\":6}}]",
  "creation": "2026-01-21 23:10:03.009271",
  "custom_blocks": [],
  "docstatus": 0,
@@ -41,6 +41,16 @@
    "document_type": "Work Report",
    "label": "Work Reports",
    "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "AMP Document",
+   "label": "AMP Documents",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "AMP Chapter",
+   "label": "AMP Chapters",
+   "quick_list_filter": "[]"
   }
  ],
  "roles": [],
@@ -79,6 +89,34 @@
    "doc_view": "List",
    "label": "Inventory Transactions",
    "link_to": "Inventory Transaction",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "",
+   "label": "New AMP Document",
+   "link_to": "AMP Document",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "AMP Chapters",
+   "link_to": "AMP Chapter",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "AMP Revisions",
+   "link_to": "AMP Revision",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "AMP Task Notes",
+   "link_to": "AMP Task Note",
    "type": "DocType"
   }
  ],

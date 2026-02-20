@@ -1,0 +1,15 @@
+{# Footer elements — rendered as running elements for WeasyPrint #}
+<div class="footer-left">
+    AMP {{ doc.aircraft_type }} - {{ doc.operator_name }}<br>
+    {{ revision_date_formatted }}
+</div>
+<div class="footer-center">
+    <span class="page-number"></span>
+</div>
+<div class="footer-right">
+    {% if revision_type == "Temporary" %}
+    Temporary Revision {{ current_revision }}
+    {% else %}
+    Revision {{ current_revision }}
+    {% endif %}
+</div>

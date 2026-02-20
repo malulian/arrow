@@ -1,0 +1,23 @@
+{# List of Effective Pages Template #}
+<div class="lep-container">
+    <table class="lep-table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Chapter</th>
+                <th>Rev</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in lep_entries %}
+            <tr>
+                <td>{{ entry.title }}</td>
+                <td>{{ entry.chapter_number }}</td>
+                <td>{{ entry.revision or "0" }}</td>
+                <td>{{ entry.revision_date_formatted or "" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

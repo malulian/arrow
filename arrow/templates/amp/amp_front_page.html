@@ -1,0 +1,48 @@
+{# Front Page Template — AMP Document #}
+<div class="front-page">
+    {% if doc.logo %}
+    <div class="front-logo">
+        <img src="{{ logo_base64 }}" alt="Company Logo">
+    </div>
+    {% endif %}
+
+    <div class="doc-title">AIRCRAFT MAINTENANCE PROGRAM</div>
+
+    <div class="aircraft-type">{{ doc.aircraft_type }}</div>
+
+    <div class="registrations-box">
+        <h3>Aircraft Registrations</h3>
+        <table class="reg-table">
+            <thead>
+                <tr>
+                    <th>Registration</th>
+                    <th>Serial Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in doc.registrations %}
+                {% if reg.active %}
+                <tr>
+                    <td>{{ reg.registration }}</td>
+                    <td>{{ reg.serial_number }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="operator-info">
+        <strong>{{ doc.operator_name }}</strong>
+        {% if doc.operator_address %}
+        <br>{{ doc.operator_address }}
+        {% endif %}
+    </div>
+
+    <div class="document-info">
+        <p>Document Number: {{ doc.document_number }}</p>
+        {% if doc.current_revision %}
+        <p>Revision {{ doc.current_revision }} — {{ frappe.utils.formatdate(doc.current_revision_date, "dd.MM.yyyy") if doc.current_revision_date else "" }}</p>
+        {% endif %}
+    </div>
+</div>

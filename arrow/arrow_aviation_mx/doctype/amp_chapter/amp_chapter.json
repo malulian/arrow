@@ -1,0 +1,215 @@
+{
+    "actions": [],
+    "allow_import": 1,
+    "allow_rename": 1,
+    "autoname": "format:AMP-CH-{chapter_code}-{####}",
+    "creation": "2026-02-18 00:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+        "chapter_info_section",
+        "amp_document",
+        "chapter_number",
+        "chapter_code",
+        "title",
+        "column_break_type",
+        "section_type",
+        "content_type",
+        "header_style",
+        "page_orientation",
+        "sort_order",
+        "section_break_revision",
+        "revision",
+        "revision_date",
+        "effective_date",
+        "column_break_flags",
+        "is_auto_generated",
+        "section_break_content",
+        "content",
+        "section_break_custom_html",
+        "custom_html",
+        "section_break_tasks",
+        "chapter_tasks"
+    ],
+    "fields": [
+        {
+            "fieldname": "chapter_info_section",
+            "fieldtype": "Section Break",
+            "label": "Chapter Information"
+        },
+        {
+            "fieldname": "amp_document",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "AMP Document",
+            "options": "AMP Document",
+            "reqd": 1
+        },
+        {
+            "fieldname": "chapter_number",
+            "fieldtype": "Int",
+            "in_list_view": 1,
+            "label": "Chapter Number",
+            "reqd": 1
+        },
+        {
+            "fieldname": "chapter_code",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Chapter Code",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "title",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Title",
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_type",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "Introduction",
+            "fieldname": "section_type",
+            "fieldtype": "Select",
+            "in_standard_filter": 1,
+            "label": "Section Type",
+            "options": "Introduction\nReport",
+            "reqd": 1
+        },
+        {
+            "default": "Rich Text",
+            "fieldname": "content_type",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "label": "Content Type",
+            "options": "Rich Text\nTask Table\nComponent Table\nChecklist\nCustom HTML",
+            "reqd": 1
+        },
+        {
+            "default": "Preface",
+            "fieldname": "header_style",
+            "fieldtype": "Select",
+            "label": "Header Style",
+            "options": "Preface\nReport"
+        },
+        {
+            "default": "Landscape",
+            "fieldname": "page_orientation",
+            "fieldtype": "Select",
+            "label": "Page Orientation",
+            "options": "Landscape\nPortrait"
+        },
+        {
+            "fieldname": "sort_order",
+            "fieldtype": "Int",
+            "label": "Sort Order"
+        },
+        {
+            "fieldname": "section_break_revision",
+            "fieldtype": "Section Break",
+            "label": "Revision Info"
+        },
+        {
+            "fieldname": "revision",
+            "fieldtype": "Data",
+            "label": "Revision"
+        },
+        {
+            "fieldname": "revision_date",
+            "fieldtype": "Date",
+            "label": "Revision Date"
+        },
+        {
+            "fieldname": "effective_date",
+            "fieldtype": "Date",
+            "label": "Effective Date"
+        },
+        {
+            "fieldname": "column_break_flags",
+            "fieldtype": "Column Break"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_auto_generated",
+            "fieldtype": "Check",
+            "label": "Auto-Generated"
+        },
+        {
+            "depends_on": "eval:doc.content_type=='Rich Text'",
+            "fieldname": "section_break_content",
+            "fieldtype": "Section Break",
+            "label": "Content"
+        },
+        {
+            "fieldname": "content",
+            "fieldtype": "Text Editor",
+            "label": "Content"
+        },
+        {
+            "depends_on": "eval:doc.content_type=='Custom HTML'",
+            "fieldname": "section_break_custom_html",
+            "fieldtype": "Section Break",
+            "label": "Custom HTML"
+        },
+        {
+            "fieldname": "custom_html",
+            "fieldtype": "Code",
+            "label": "Custom HTML",
+            "options": "HTML"
+        },
+        {
+            "depends_on": "eval:['Task Table','Component Table','Checklist'].includes(doc.content_type)",
+            "fieldname": "section_break_tasks",
+            "fieldtype": "Section Break",
+            "label": "Tasks"
+        },
+        {
+            "fieldname": "chapter_tasks",
+            "fieldtype": "Table",
+            "label": "Chapter Tasks",
+            "options": "AMP Chapter Task"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [
+        {
+            "link_doctype": "AMP Task Note",
+            "link_fieldname": "chapter"
+        }
+    ],
+    "modified": "2026-02-18 00:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "AMP Chapter",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "select": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "search_fields": "title,chapter_code,amp_document",
+    "show_name_in_global_search": 1,
+    "sort_field": "sort_order",
+    "sort_order": "ASC",
+    "states": [],
+    "title_field": "title",
+    "track_changes": 1
+}

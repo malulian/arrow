@@ -1,0 +1,566 @@
+/* AMP PDF Stylesheet — Arrow Aviation */
+/* WeasyPrint-compatible CSS for A4 Landscape controlled documents */
+
+/* ===== PAGE SETUP ===== */
+@page {
+    size: A4 landscape;
+    margin: 20mm 15mm 25mm 15mm;
+
+    @top-left {
+        content: "";
+    }
+    @top-right {
+        content: "";
+    }
+    @bottom-left {
+        content: element(footer-left);
+    }
+    @bottom-center {
+        content: element(footer-center);
+    }
+    @bottom-right {
+        content: element(footer-right);
+    }
+}
+
+@page :first {
+    margin-top: 15mm;
+}
+
+@page chapter-start {
+    /* Chapter pages get standard margins */
+}
+
+/* ===== BASE STYLES ===== */
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9pt;
+    line-height: 1.4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== RUNNING FOOTER ELEMENTS ===== */
+.footer-left {
+    position: running(footer-left);
+    font-size: 8pt;
+    color: #555;
+}
+
+.footer-center {
+    position: running(footer-center);
+    font-size: 8pt;
+    color: #555;
+    text-align: center;
+}
+
+.footer-right {
+    position: running(footer-right);
+    font-size: 8pt;
+    color: #555;
+    text-align: right;
+}
+
+.footer-center .page-number::after {
+    content: "Page " counter(page) " of " counter(pages);
+}
+
+/* ===== PAGE BREAK CONTROLS ===== */
+.chapter-break {
+    page-break-before: always;
+}
+
+.no-break {
+    page-break-inside: avoid;
+}
+
+.keep-together {
+    page-break-inside: avoid;
+}
+
+/* ===== HEADER STYLES ===== */
+
+/* Preface Header (Green shaded) */
+.header-preface {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    border: 1px solid #999;
+}
+
+.header-preface td {
+    border: 1px solid #999;
+    padding: 4px 8px;
+    vertical-align: middle;
+}
+
+.header-preface .header-title-row {
+    background-color: #E2EFD9;
+}
+
+.header-preface .header-title-row td {
+    font-size: 14pt;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+}
+
+.header-preface .header-detail-row {
+    background-color: #E2EFD9;
+}
+
+.header-preface .header-detail-row td {
+    font-size: 9pt;
+    text-align: center;
+}
+
+.header-preface .header-logo {
+    text-align: center;
+    vertical-align: middle;
+    width: 120px;
+}
+
+.header-preface .header-logo img {
+    max-height: 50px;
+    max-width: 110px;
+}
+
+/* Report Header (Simpler, no green) */
+.header-report {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    border: 1px solid #999;
+}
+
+.header-report td {
+    border: 1px solid #999;
+    padding: 4px 8px;
+    vertical-align: middle;
+    font-size: 9pt;
+    text-align: center;
+}
+
+.header-report .section-title {
+    font-weight: bold;
+    font-size: 11pt;
+    text-align: left;
+    width: 35%;
+}
+
+/* ===== FRONT PAGE ===== */
+.front-page {
+    text-align: center;
+    padding-top: 40mm;
+}
+
+.front-page .doc-title {
+    font-size: 28pt;
+    font-weight: bold;
+    color: #2E5B2E;
+    margin-bottom: 20px;
+}
+
+.front-page .aircraft-type {
+    font-size: 22pt;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.front-page .front-logo {
+    margin: 20px auto;
+}
+
+.front-page .front-logo img {
+    max-width: 200px;
+    max-height: 100px;
+}
+
+.front-page .registrations-box {
+    margin: 30px auto;
+    width: 60%;
+    border: 2px solid #2E5B2E;
+    padding: 15px;
+}
+
+.front-page .registrations-box h3 {
+    margin-top: 0;
+    color: #2E5B2E;
+}
+
+.front-page .reg-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.front-page .reg-table th,
+.front-page .reg-table td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+.front-page .reg-table th {
+    background-color: #E2EFD9;
+    font-weight: bold;
+}
+
+.front-page .operator-info {
+    margin-top: 30px;
+    font-size: 12pt;
+}
+
+.front-page .document-info {
+    margin-top: 20px;
+    font-size: 10pt;
+    color: #666;
+}
+
+/* ===== TABLE OF CONTENTS ===== */
+.toc-container {
+    columns: 2;
+    column-gap: 30px;
+}
+
+.toc-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px dotted #ccc;
+    break-inside: avoid;
+}
+
+.toc-entry .toc-title {
+    flex: 1;
+}
+
+.toc-entry .toc-pages {
+    text-align: right;
+    min-width: 60px;
+    color: #666;
+}
+
+.toc-section-header {
+    font-weight: bold;
+    font-size: 10pt;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #2E5B2E;
+    break-inside: avoid;
+    break-after: avoid;
+}
+
+/* ===== LIST OF EFFECTIVE PAGES ===== */
+.lep-container {
+    columns: 2;
+    column-gap: 20px;
+}
+
+.lep-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    break-inside: auto;
+    margin-bottom: 10px;
+}
+
+.lep-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 3px 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.lep-table td {
+    border: 1px solid #ccc;
+    padding: 2px 5px;
+    text-align: center;
+}
+
+/* ===== RECORD OF REVISIONS ===== */
+.revision-record-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.revision-record-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 5px 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.revision-record-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+/* ===== REVISION HIGHLIGHTS ===== */
+.revision-highlights-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.revision-highlights-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 5px 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.revision-highlights-table td {
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+}
+
+.revision-highlights-table td.highlights-text {
+    text-align: left;
+}
+
+/* ===== TASK TABLES (Inspections) ===== */
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+}
+
+.task-table thead {
+    display: table-header-group; /* Repeat headers on page break */
+}
+
+.task-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 4px 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 8pt;
+    white-space: nowrap;
+}
+
+.task-table td {
+    border: 1px solid #ccc;
+    padding: 3px 6px;
+    vertical-align: top;
+}
+
+.task-table td.task-number {
+    text-align: center;
+    white-space: nowrap;
+    width: 70px;
+}
+
+.task-table td.ata {
+    text-align: center;
+    width: 40px;
+}
+
+.task-table td.task-desc {
+    text-align: left;
+    width: auto;
+}
+
+.task-table td.zone {
+    text-align: center;
+    width: 50px;
+}
+
+.task-table td.access {
+    text-align: left;
+    width: 120px;
+}
+
+.task-table td.manhours {
+    text-align: center;
+    width: 60px;
+}
+
+.task-table td.performed-by {
+    text-align: center;
+    width: 70px;
+}
+
+.task-table td.reference {
+    text-align: left;
+    width: 100px;
+}
+
+.task-table td.interval {
+    text-align: center;
+    width: 80px;
+}
+
+/* ===== COMPONENT TABLE ===== */
+.component-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+}
+
+.component-table thead {
+    display: table-header-group;
+}
+
+.component-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 4px 6px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.component-table td {
+    border: 1px solid #ccc;
+    padding: 3px 6px;
+    vertical-align: top;
+}
+
+/* ===== CHECKLIST TABLE ===== */
+.checklist-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+}
+
+.checklist-table thead {
+    display: table-header-group;
+}
+
+.checklist-table th {
+    background-color: #E2EFD9;
+    border: 1px solid #999;
+    padding: 4px 6px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.checklist-table td {
+    border: 1px solid #ccc;
+    padding: 3px 6px;
+    vertical-align: top;
+}
+
+.checklist-zone-header {
+    background-color: #F0F0F0;
+    font-weight: bold;
+    text-align: left;
+    padding: 4px 8px;
+}
+
+/* ===== RICH CONTENT (Introduction pages) ===== */
+.rich-content {
+    line-height: 1.6;
+}
+
+.rich-content h1 {
+    font-size: 16pt;
+    color: #2E5B2E;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.rich-content h2 {
+    font-size: 13pt;
+    color: #2E5B2E;
+    margin-top: 12px;
+    margin-bottom: 6px;
+}
+
+.rich-content h3 {
+    font-size: 11pt;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.rich-content p {
+    margin-bottom: 6px;
+}
+
+.rich-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+}
+
+.rich-content table th,
+.rich-content table td {
+    border: 1px solid #ccc;
+    padding: 4px 6px;
+}
+
+.rich-content table th {
+    background-color: #E2EFD9;
+    font-weight: bold;
+}
+
+.rich-content ol,
+.rich-content ul {
+    margin-left: 15px;
+    margin-bottom: 6px;
+}
+
+.rich-content li {
+    margin-bottom: 3px;
+}
+
+/* ===== TASK NOTES ===== */
+.task-note {
+    border: 2px solid #FFA500;
+    background-color: #FFF8E1;
+    padding: 8px 12px;
+    margin: 8px 0;
+    page-break-inside: avoid;
+}
+
+.task-note-header {
+    font-weight: bold;
+    color: #E65100;
+    margin-bottom: 4px;
+    font-size: 9pt;
+}
+
+.task-note-meta {
+    font-size: 7pt;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.task-note-content {
+    font-size: 8pt;
+}
+
+/* ===== SIGNATURE BLOCK ===== */
+.signature-block {
+    margin-top: 30px;
+    page-break-inside: avoid;
+}
+
+.signature-line {
+    border-top: 1px solid #333;
+    width: 250px;
+    margin-top: 40px;
+    padding-top: 4px;
+    font-size: 9pt;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-bold { font-weight: bold; }
+.text-small { font-size: 8pt; }
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }

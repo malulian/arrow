@@ -1,0 +1,18 @@
+{# Table of Contents Template #}
+<div class="toc-container">
+    <div class="toc-section-header">INTRODUCTION</div>
+    {% for chapter in intro_chapters %}
+    <div class="toc-entry">
+        <span class="toc-title">{{ chapter.title }}</span>
+        <span class="toc-pages">{{ chapter.chapter_number }}</span>
+    </div>
+    {% endfor %}
+
+    <div class="toc-section-header">PROGRAM REPORT</div>
+    {% for chapter in report_chapters %}
+    <div class="toc-entry">
+        <span class="toc-title">{{ chapter.title }}</span>
+        <span class="toc-pages">{{ chapter.chapter_number }}</span>
+    </div>
+    {% endfor %}
+</div>
