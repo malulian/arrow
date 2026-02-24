@@ -544,28 +544,26 @@ def fix_inventory_for_submitted_reports(submit_drafts=False):
 					'transaction_type': 'Withdraw',
 					'quantity': part.quantity_used,
 					'reference_doctype': 'Work Report',
-			reports_submitted': reports_submitted,
-		'parts_deducted': parts_deducted,
-		'total_reports_checked': len(allort.name} on aircraft {report.aircraft} (Fixed by script)'
-				}).insert(ignore_permissions=True)
-				
-				parts_deducted += 1
+				'reference_name': report.name,
+				'notes': f'Used in Work Report {report.name} on aircraft {report.aircraft} (Fixed by script)'
+			}).insert(ignore_permissions=True)
 			
-			if report_has_missing_deductions:
-				reports_fixed += 1
-				
-		except Exception as e:
-			error_msg = f"Error processing report {report_data.name}: {str(e)}"
-			errors.append(error_msg)
-			frappe.log_error(error_msg, "Fix Inventory Deduction")
-	
-	# Commit changes
-	frappe.db.commit()
-	
-	return {
-		'success': True,
-		'reports_fixed': reports_fixed,
-		'parts_deducted': parts_deducted,
-		'total_reports_checked': len(submitted_reports),
-		'errors': errors
-	}
+			parts_deducted += 1
+		
+		if report_has_missing_deductions:
+			reports_fixed += 1
+			
+	except Exception as e:
+		error_msg = f"Error processing report {report_data.name}: {str(e)}"
+		errors.append(error_msg)
+		frappe.log_error(error_msg, "Fix Inventory Deduction")
+
+# Commit changes
+frappe.db.commit()
+
+return {
+	'success': True,
+	'reports_fixed': reports_fixed,
+	'reports_submitted': reports_submitted,
+	'parts_deducted': parts_deducted,
+	'total_reports_checked': len(all_reports),
