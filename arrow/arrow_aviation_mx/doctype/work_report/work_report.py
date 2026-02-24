@@ -136,6 +136,21 @@ class WorkReport(Document):
 		
 		for part in self.parts_used:
 			if part.part and part.quantity_used > 0:
+				# Check if already deducted (prevent duplicate deduction)
+				existing_transaction = frappe.db.exists(
+					'Inventory Transaction',
+					{
+						'reference_doctype': 'Work Report',
+						'reference_name': self.name,
+						'inventory_item': part.part,
+						'transaction_type': 'Withdraw'
+					}
+				)
+				
+				if existing_transaction:
+					# Already deducted, skip
+					continue
+				
 				# Deduct from Inventory Item
 				inv_item = frappe.get_doc('Inventory Item', part.part)
 				inv_item.quantity = (inv_item.quantity or 0) - part.quantity_used
@@ -433,3 +448,90 @@ def send_report_email(report_name, recipient_email):
 	except Exception as e:
 		frappe.log_error(str(e), "Send Work Report Email")
 		return {'success': False, 'message': str(e)}
+
+
+@frappe.whitelist()
+def fix_inventory_for_submitted_reports():
+	"""Fix inventory deduction for all submitted work reports that are missing inventory transactions"""
+	
+	# Get all submitted work reports
+	submitted_reports = frappe.get_all(
+		'Work Report',
+		filters={'docstatus': 1},  # 1 = Submitted
+		fields=['name', 'aircraft', 'work_date']
+	)
+	
+	reports_fixed = 0
+	parts_deducted = 0
+	errors = []
+	
+	for report_data in submitted_reports:
+		try:
+			report = frappe.get_doc('Work Report', report_data.name)
+			
+			if not report.parts_used:
+				continue
+			
+			report_has_missing_deductions = False
+			
+			for part in report.parts_used:
+				if not part.part or part.quantity_used <= 0:
+					continue
+				
+				# Check if this part was already deducted
+				existing_transaction = frappe.db.exists(
+					'Inventory Transaction',
+					{
+						'reference_doctype': 'Work Report',
+						'reference_name': report.name,
+						'inventory_item': part.part,
+						'transaction_type': 'Withdraw'
+					}
+				)
+				
+				if existing_transaction:
+					# Already deducted
+					continue
+				
+				# This part needs to be deducted
+				report_has_missing_deductions = True
+				
+				# Get inventory item
+				inv_item = frappe.get_doc('Inventory Item', part.part)
+				
+				# Deduct from inventory
+				inv_item.quantity = (inv_item.quantity or 0) - part.quantity_used
+				inv_item.last_withdrawal_date = today()
+				inv_item.save(ignore_permissions=True)
+				
+				# Create transaction record
+				frappe.get_doc({
+					'doctype': 'Inventory Transaction',
+					'inventory_item': part.part,
+					'transaction_type': 'Withdraw',
+					'quantity': part.quantity_used,
+					'reference_doctype': 'Work Report',
+					'reference_name': report.name,
+					'notes': f'Used in Work Report {report.name} on aircraft {report.aircraft} (Fixed by script)'
+				}).insert(ignore_permissions=True)
+				
+				parts_deducted += 1
+			
+			if report_has_missing_deductions:
+				reports_fixed += 1
+				
+		except Exception as e:
+			error_msg = f"Error processing report {report_data.name}: {str(e)}"
+			errors.append(error_msg)
+			frappe.log_error(error_msg, "Fix Inventory Deduction")
+	
+	# Commit changes
+	frappe.db.commit()
+	
+	return {
+		'success': True,
+		'reports_fixed': reports_fixed,
+		'parts_deducted': parts_deducted,
+		'total_reports_checked': len(submitted_reports),
+		'errors': errors
+	}
