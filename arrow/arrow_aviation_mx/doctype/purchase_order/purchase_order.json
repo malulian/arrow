@@ -17,18 +17,21 @@
         "section_break_item",
         "item_name",
         "part_number",
-        "column_break_item",
         "quantity",
-        "market_price",
-        "section_break_aircraft",
+        "column_break_item",
         "aircraft",
+        "approved_by_user",
+        "market_price",
+        "section_break_inventory",
+        "linked_inventory_item",
+        "column_break_inventory",
         "cost_category",
         "section_break_quotes",
         "quotes",
         "quotes_warning_html",
         "section_break_approval",
-        "approved_by_user",
         "approval_date",
+        "approval_token",
         "column_break_approval",
         "selected_quote_idx",
         "selected_supplier_name",
@@ -41,6 +44,7 @@
         "tracking_url",
         "column_break_tracking",
         "expected_arrival",
+        "shipment_reference",
         "section_break_receiving",
         "received_date",
         "inspection_user",
@@ -49,8 +53,10 @@
         "inspection_notes",
         "section_break_invoice",
         "invoice_attachment",
-        "section_break_inventory",
-        "linked_inventory_item",
+        "customs_invoice",
+        "column_break_invoice",
+        "additional_documents",
+        "total_landed_cost",
         "section_break_notes",
         "notes"
     ],
@@ -75,7 +81,7 @@
             "in_list_view": 1,
             "in_standard_filter": 1,
             "label": "Status",
-            "options": "New Order\nAwaiting Approval\nApproved\nPO Issued\nAwaiting Tracking\nIn Transit\nReceived\nAwaiting Inspection\nAwaiting Invoice\nCompleted\nCancelled",
+            "options": "New Order\nAwaiting Approval\nApproved\nOrdered\nSent\nReceived\nPending Inspection\nCompleted\nCancelled",
             "reqd": 1
         },
         {
@@ -118,14 +124,29 @@
             "reqd": 1
         },
         {
-            "fieldname": "column_break_item",
-            "fieldtype": "Column Break"
-        },
-        {
             "default": "1",
             "fieldname": "quantity",
             "fieldtype": "Int",
             "label": "Quantity",
+            "reqd": 1
+        },
+        {
+            "fieldname": "column_break_item",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "aircraft",
+            "fieldtype": "Select",
+            "in_standard_filter": 1,
+            "label": "Aircraft / General Inventory",
+            "options": "\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP\nGeneral",
+            "reqd": 1
+        },
+        {
+            "fieldname": "approved_by_user",
+            "fieldtype": "Link",
+            "label": "Approver",
+            "options": "User",
             "reqd": 1
         },
         {
@@ -134,16 +155,20 @@
             "label": "Market Price (Reference)"
         },
         {
-            "fieldname": "section_break_aircraft",
+            "collapsible": 1,
+            "fieldname": "section_break_inventory",
             "fieldtype": "Section Break",
-            "label": "Cost Tracking"
+            "label": "Inventory & Category"
         },
         {
-            "fieldname": "aircraft",
-            "fieldtype": "Select",
-            "in_standard_filter": 1,
-            "label": "Aircraft",
-            "options": "\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP\nGeneral"
+            "fieldname": "linked_inventory_item",
+            "fieldtype": "Link",
+            "label": "Linked Inventory Item",
+            "options": "Inventory Item"
+        },
+        {
+            "fieldname": "column_break_inventory",
+            "fieldtype": "Column Break"
         },
         {
             "fieldname": "cost_category",
@@ -169,22 +194,22 @@
             "options": "<div id=\"quotes_warning\"></div>"
         },
         {
-            "depends_on": "eval:['Awaiting Approval', 'Approved', 'PO Issued', 'Awaiting Tracking', 'In Transit', 'Received', 'Awaiting Inspection', 'Awaiting Invoice', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Awaiting Approval', 'Approved', 'Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
             "fieldname": "section_break_approval",
             "fieldtype": "Section Break",
-            "label": "Approval"
-        },
-        {
-            "fieldname": "approved_by_user",
-            "fieldtype": "Link",
-            "label": "Approved By",
-            "options": "User"
+            "label": "Approval Details"
         },
         {
             "fieldname": "approval_date",
             "fieldtype": "Datetime",
             "label": "Approval Date",
             "read_only": 1
+        },
+        {
+            "fieldname": "approval_token",
+            "fieldtype": "Data",
+            "hidden": 1,
+            "label": "Approval Token"
         },
         {
             "fieldname": "column_break_approval",
@@ -209,10 +234,10 @@
             "read_only": 1
         },
         {
-            "depends_on": "eval:['PO Issued', 'Awaiting Tracking', 'In Transit', 'Received', 'Awaiting Inspection', 'Awaiting Invoice', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Approved', 'Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
             "fieldname": "section_break_po",
             "fieldtype": "Section Break",
-            "label": "Purchase Order"
+            "label": "Purchase Order Document"
         },
         {
             "fieldname": "po_issue_date",
@@ -225,7 +250,7 @@
             "label": "PO Document (PDF)"
         },
         {
-            "depends_on": "eval:['Awaiting Tracking', 'In Transit', 'Received', 'Awaiting Inspection', 'Awaiting Invoice', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
             "fieldname": "section_break_tracking",
             "fieldtype": "Section Break",
             "label": "Shipping & Tracking"
@@ -251,7 +276,13 @@
             "label": "Expected Arrival"
         },
         {
-            "depends_on": "eval:['Received', 'Awaiting Inspection', 'Awaiting Invoice', 'Completed'].includes(doc.status)",
+            "description": "Use the same reference for multiple orders in one shipment",
+            "fieldname": "shipment_reference",
+            "fieldtype": "Data",
+            "label": "Shipment Reference"
+        },
+        {
+            "depends_on": "eval:['Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
             "fieldname": "section_break_receiving",
             "fieldtype": "Section Break",
             "label": "Receiving & Inspection"
@@ -283,10 +314,10 @@
             "label": "Inspection Notes"
         },
         {
-            "depends_on": "eval:['Awaiting Invoice', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
             "fieldname": "section_break_invoice",
             "fieldtype": "Section Break",
-            "label": "Invoice"
+            "label": "Documents & Invoice"
         },
         {
             "fieldname": "invoice_attachment",
@@ -294,16 +325,24 @@
             "label": "Invoice (Scanned PDF)"
         },
         {
-            "collapsible": 1,
-            "fieldname": "section_break_inventory",
-            "fieldtype": "Section Break",
-            "label": "Inventory Link"
+            "fieldname": "customs_invoice",
+            "fieldtype": "Attach",
+            "label": "Customs Broker Invoice"
         },
         {
-            "fieldname": "linked_inventory_item",
-            "fieldtype": "Link",
-            "label": "Linked Inventory Item",
-            "options": "Inventory Item"
+            "fieldname": "column_break_invoice",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "additional_documents",
+            "fieldtype": "Attach",
+            "label": "Additional Documents"
+        },
+        {
+            "description": "Total cost including item, shipping, customs, etc.",
+            "fieldname": "total_landed_cost",
+            "fieldtype": "Currency",
+            "label": "Total Landed Cost"
         },
         {
             "collapsible": 1,
@@ -340,7 +379,7 @@
             "write": 1
         }
     ],
-    "search_fields": "item_name,part_number,status",
+    "search_fields": "item_name,part_number,status,aircraft",
     "show_name_in_global_search": 1,
     "sort_field": "modified",
     "sort_order": "DESC",
@@ -359,27 +398,19 @@
         },
         {
             "color": "purple",
-            "title": "PO Issued"
-        },
-        {
-            "color": "yellow",
-            "title": "Awaiting Tracking"
+            "title": "Ordered"
         },
         {
             "color": "cyan",
-            "title": "In Transit"
+            "title": "Sent"
         },
         {
             "color": "blue",
             "title": "Received"
         },
         {
-            "color": "orange",
-            "title": "Awaiting Inspection"
-        },
-        {
-            "color": "pink",
-            "title": "Awaiting Invoice"
+            "color": "yellow",
+            "title": "Pending Inspection"
         },
         {
             "color": "green",
