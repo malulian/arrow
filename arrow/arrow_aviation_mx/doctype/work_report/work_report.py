@@ -550,20 +550,22 @@ def fix_inventory_for_submitted_reports(submit_drafts=False):
 			
 			parts_deducted += 1
 		
-		if report_has_missing_deductions:
-			reports_fixed += 1
-			
-	except Exception as e:
-		error_msg = f"Error processing report {report_data.name}: {str(e)}"
-		errors.append(error_msg)
-		frappe.log_error(error_msg, "Fix Inventory Deduction")
-
-# Commit changes
-frappe.db.commit()
-
-return {
-	'success': True,
-	'reports_fixed': reports_fixed,
-	'reports_submitted': reports_submitted,
-	'parts_deducted': parts_deducted,
-	'total_reports_checked': len(all_reports),
+			if report_has_missing_deductions:
+				reports_fixed += 1
+				
+		except Exception as e:
+			error_msg = f"Error processing report {report_data.name}: {str(e)}"
+			errors.append(error_msg)
+			frappe.log_error(error_msg, "Fix Inventory Deduction")
+	
+	# Commit changes
+	frappe.db.commit()
+	
+	return {
+		'success': True,
+		'reports_fixed': reports_fixed,
+		'reports_submitted': reports_submitted,
+		'parts_deducted': parts_deducted,
+		'total_reports_checked': len(all_reports),
+		'errors': errors
+	}
