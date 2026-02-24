@@ -239,6 +239,17 @@
             "share": 1,
             "submit": 1,
             "write": 1
+        },
+        {
+            "create": 1,
+            "email": 1,
+            "if_owner": 1,
+            "print": 1,
+            "read": 1,
+            "role": "Technician",
+            "select": 1,
+            "submit": 1,
+            "write": 1
         }
     ],
     "search_fields": "aircraft,technician,work_date",

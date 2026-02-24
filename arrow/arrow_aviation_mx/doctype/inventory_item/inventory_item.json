@@ -191,6 +191,11 @@
             "select": 1,
             "share": 1,
             "write": 1
+        },
+        {
+            "read": 1,
+            "role": "Technician",
+            "select": 1
         }
     ],
     "search_fields": "item_name,part_number,alternate_pn,location",
