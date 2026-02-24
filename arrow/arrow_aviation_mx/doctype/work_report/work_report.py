@@ -173,8 +173,25 @@ class WorkReport(Document):
 		if not self.parts_used or len(self.parts_used) == 0:
 			return
 		
-		# Get notification recipient (could be from settings)
-		recipient = frappe.db.get_single_value('System Settings', 'admin_email') or 'admin@example.com'
+		# Get notification recipient - use Administrator email
+		try:
+			recipient = frappe.db.get_value('User', 'Administrator', 'email')
+			if not recipient:
+				# Fallback to first System Manager
+				system_managers = frappe.get_all('Has Role', 
+					filters={'role': 'System Manager', 'parenttype': 'User'},
+					fields=['parent'],
+					limit=1
+				)
+				if system_managers:
+					recipient = frappe.db.get_value('User', system_managers[0].parent, 'email')
+			
+			if not recipient:
+				# No recipient found, skip notification
+				return
+		except Exception:
+			# If error, skip notification silently
+			return
 		
 		# Build parts table
 		parts_html = ""
