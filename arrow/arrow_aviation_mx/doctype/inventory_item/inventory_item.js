@@ -24,6 +24,24 @@ frappe.ui.form.on('Inventory Item', {
             }, __('Actions'));
         }
 
+        // Show pending receiving inspection warning
+        if (frm.doc.pending_receiving_inspection) {
+            let inspection_msg = 'Pending Receiving Inspection';
+            if (frm.doc.quantity > 0) {
+                inspection_msg += ' (IN STOCK)';
+            }
+            frm.dashboard.add_comment(inspection_msg, 'orange', true);
+
+            frm.add_custom_button(__('Complete Inspection'), function () {
+                frm.set_value('pending_receiving_inspection', 0);
+                frm.save();
+                frappe.show_alert({
+                    message: __('Receiving inspection completed'),
+                    indicator: 'green'
+                });
+            }, __('Actions'));
+        }
+
         // Show expiry warning
         if (frm.doc.expiry_date) {
             let expiry = frappe.datetime.str_to_obj(frm.doc.expiry_date);

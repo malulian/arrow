@@ -13,11 +13,19 @@ frappe.ui.form.on('Work Report', {
 
         // Show parts used summary
         if (frm.doc.parts_used && frm.doc.parts_used.length > 0) {
-            frm.dashboard.add_comment(
-                `${frm.doc.parts_used.length} part(s) will be deducted from inventory on submit`,
-                'blue',
-                true
-            );
+            if (frm.doc.docstatus === 0) {
+                frm.dashboard.add_comment(
+                    `${frm.doc.parts_used.length} part(s) will be deducted from inventory when you submit this report`,
+                    'blue',
+                    true
+                );
+            } else if (frm.doc.docstatus === 1) {
+                frm.dashboard.add_comment(
+                    `${frm.doc.parts_used.length} part(s) have been deducted from inventory`,
+                    'green',
+                    true
+                );
+            }
         }
     },
 

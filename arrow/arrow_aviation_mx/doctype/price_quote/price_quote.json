@@ -12,6 +12,7 @@
         "column_break_1",
         "quote_amount",
         "currency",
+        "estimated_delivery_time",
         "column_break_2",
         "quote_date",
         "validity_days",
@@ -61,6 +62,12 @@
             "fieldtype": "Link",
             "label": "Currency",
             "options": "Currency"
+        },
+        {
+            "fieldname": "estimated_delivery_time",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "label": "Estimated Delivery Time"
         },
         {
             "fieldname": "column_break_2",
