@@ -1,5 +1,17 @@
 frappe.ui.form.on('Work Report', {
     refresh: function (frm) {
+        // Add Submit button for draft reports with parts
+        if (frm.doc.docstatus === 0 && !frm.is_new() && frm.doc.parts_used && frm.doc.parts_used.length > 0) {
+            frm.add_custom_button(__('Submit & Deduct from Inventory'), function () {
+                frappe.confirm(
+                    __('האם לשלוח את הדוח ולנכות את הפריטים מהמלאי?'),
+                    function() {
+                        frm.savesubmit();
+                    }
+                );
+            }).addClass('btn-primary');
+        }
+
         // Add PDF buttons
         if (!frm.is_new()) {
             frm.add_custom_button(__('Generate PDF'), function () {
@@ -15,13 +27,13 @@ frappe.ui.form.on('Work Report', {
         if (frm.doc.parts_used && frm.doc.parts_used.length > 0) {
             if (frm.doc.docstatus === 0) {
                 frm.dashboard.add_comment(
-                    `${frm.doc.parts_used.length} part(s) will be deducted from inventory when you submit this report`,
+                    `${frm.doc.parts_used.length} חלקים ינוכו מהמלאי כשתשלח את הדוח`,
                     'blue',
                     true
                 );
             } else if (frm.doc.docstatus === 1) {
                 frm.dashboard.add_comment(
-                    `${frm.doc.parts_used.length} part(s) have been deducted from inventory`,
+                    `${frm.doc.parts_used.length} חלקים נוכו מהמלאי בהצלחה`,
                     'green',
                     true
                 );
@@ -148,34 +160,31 @@ function calculate_total_hours(frm) {
         }
 
         let diff_minutes = end_minutes - start_minutes;
-        let total_hours = (diff_minutes / 60).toFixed(2);
-
-        frm.set_value('total_hours', parseFloat(total_hours));
-
-        // Set HH:MM display
         let hours = Math.floor(diff_minutes / 60);
         let minutes = diff_minutes % 60;
-        let display = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
-        frm.set_value('total_hours_display', display);
+
+        frm.set_value('total_hours', (diff_minutes / 60).toFixed(2));
+        frm.set_value('total_hours_display', `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`);
     }
 }
 
 function generate_pdf(frm) {
     frappe.call({
         method: 'arrow.arrow_aviation_mx.doctype.work_report.work_report.generate_work_report_pdf',
-        args: { report_name: frm.doc.name },
+        args: {
+            report_name: frm.doc.name
+        },
         freeze: true,
         freeze_message: __('Generating PDF...'),
         callback: function (r) {
             if (r.message && r.message.success) {
+                window.open(r.message.file_url, '_blank');
                 frappe.show_alert({
                     message: __('PDF generated successfully'),
                     indicator: 'green'
                 });
-                // Open PDF in new tab
-                window.open(r.message.file_url, '_blank');
             } else {
-                frappe.msgprint(r.message.message || 'Error generating PDF');
+                frappe.msgprint(__('Failed to generate PDF'));
             }
         }
     });
@@ -189,12 +198,11 @@ function send_by_email(frm) {
                 label: 'Recipient Email',
                 fieldname: 'email',
                 fieldtype: 'Data',
-                options: 'Email',
                 reqd: 1
             }
         ],
         primary_action_label: 'Send',
-        primary_action: function (values) {
+        primary_action(values) {
             frappe.call({
                 method: 'arrow.arrow_aviation_mx.doctype.work_report.work_report.send_report_email',
                 args: {
@@ -206,15 +214,15 @@ function send_by_email(frm) {
                 callback: function (r) {
                     if (r.message && r.message.success) {
                         frappe.show_alert({
-                            message: r.message.message,
+                            message: __('Email sent successfully'),
                             indicator: 'green'
                         });
+                        d.hide();
                     } else {
-                        frappe.msgprint(r.message.message || 'Error sending email');
+                        frappe.msgprint(r.message.message || __('Failed to send email'));
                     }
                 }
             });
-            d.hide();
         }
     });
     d.show();

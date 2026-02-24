@@ -451,25 +451,58 @@ def send_report_email(report_name, recipient_email):
 
 
 @frappe.whitelist()
-def fix_inventory_for_submitted_reports():
-	"""Fix inventory deduction for all submitted work reports that are missing inventory transactions"""
+def fix_inventory_for_submitted_reports(submit_drafts=False):
+	"""Fix inventory deduction for all submitted work reports that are missing inventory transactions
 	
-	# Get all submitted work reports
-	submitted_reports = frappe.get_all(
-		'Work Report',
-		filters={'docstatus': 1},  # 1 = Submitted
-		fields=['name', 'aircraft', 'work_date']
-	)
+	Args:
+		submit_drafts: If True, will also submit draft reports with parts and deduct inventory
+	"""
+	
+	# Get reports based on parameter
+	if submit_drafts:
+		# Get all draft reports (0) and submitted reports (1)
+		all_reports = frappe.get_all(
+			'Work Report',
+			filters={'docstatus': ['in', [0, 1]]},
+			fields=['name', 'aircraft', 'work_date', 'docstatus']
+		)
+	else:
+		# Get only submitted work reports
+		all_reports = frappe.get_all(
+			'Work Report',
+			filters={'docstatus': 1},  # 1 = Submitted
+			fields=['name', 'aircraft', 'work_date', 'docstatus']
+		)
 	
 	reports_fixed = 0
+	reports_submitted = 0
 	parts_deducted = 0
 	errors = []
 	
-	for report_data in submitted_reports:
+	for report_data in all_reports:
 		try:
 			report = frappe.get_doc('Work Report', report_data.name)
 			
 			if not report.parts_used:
+				continue
+			
+			# If report is draft and submit_drafts is True, submit it first
+			if report.docstatus == 0 and submit_drafts:
+				try:
+					report.submit()
+					reports_submitted += 1
+					# The on_submit hook will handle inventory deduction
+					# Skip to next report since deduction is done
+					reports_fixed += 1
+					continue
+				except Exception as e:
+					error_msg = f"Error submitting draft report {report.name}: {str(e)}"
+					errors.append(error_msg)
+					frappe.log_error(error_msg, "Submit Draft Report")
+					continue
+			
+			# Only process submitted reports for fixing inventory
+			if report.docstatus != 1:
 				continue
 			
 			report_has_missing_deductions = False
@@ -511,8 +544,9 @@ def fix_inventory_for_submitted_reports():
 					'transaction_type': 'Withdraw',
 					'quantity': part.quantity_used,
 					'reference_doctype': 'Work Report',
-					'reference_name': report.name,
-					'notes': f'Used in Work Report {report.name} on aircraft {report.aircraft} (Fixed by script)'
+			reports_submitted': reports_submitted,
+		'parts_deducted': parts_deducted,
+		'total_reports_checked': len(allort.name} on aircraft {report.aircraft} (Fixed by script)'
 				}).insert(ignore_permissions=True)
 				
 				parts_deducted += 1
