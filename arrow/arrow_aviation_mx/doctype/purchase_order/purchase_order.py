@@ -147,24 +147,8 @@ class PurchaseOrder(Document):
 		return '\n'.join(lines)
 
 	def _get_notification_recipients(self):
-		"""Get email recipients from ARROW MX Settings"""
-		recipients = []
-		try:
-			settings = frappe.get_doc("ARROW MX Settings")
-			if settings.work_report_recipients:
-				for r in settings.work_report_recipients:
-					if r.email:
-						recipients.append(r.email)
-		except Exception:
-			pass
-		# Fallback: app email
-		if not recipients:
-			app_email = frappe.db.get_single_value('ARROW MX Settings', 'notification_email') if frappe.db.table_exists('ARROW MX Settings') else None
-			if app_email:
-				recipients.append(app_email)
-			else:
-				recipients.append('oshermalul@gmail.com')
-		return recipients
+		"""Get email recipients — sends to Noa's email for WhatsApp relay"""
+		return ['noa992250@gmail.com']
 
 	def handle_item_received(self):
 		"""When item is received — update inventory"""
