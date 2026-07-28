@@ -21,7 +21,7 @@
         "column_break_item",
         "aircraft",
         "urgency",
-        "required_date",
+        "requested_by",
         "supplier",
         "approved_by_user",
         "market_price",
@@ -374,9 +374,12 @@
             "default": "Routine"
         },
         {
-            "fieldname": "required_date",
-            "fieldtype": "Date",
-            "label": "Required By"
+            "fieldname": "requested_by",
+            "fieldtype": "Data",
+            "label": "Requested By",
+            "default": null,
+            "in_list_view": 1,
+            "reqd": 0
         },
         {
             "fieldname": "supplier",

@@ -16,7 +16,14 @@ class PurchaseOrder(Document):
 
 	def validate(self):
 		"""Validate purchase order"""
+		self.set_requested_by()
 		self.link_inventory_by_part_number()
+
+	def set_requested_by(self):
+		"""Auto-fill requested_by with the creator's full name if empty"""
+		if not self.requested_by and self.owner:
+			full_name = frappe.db.get_value('User', self.owner, 'full_name') or self.owner
+			self.requested_by = full_name
 
 	def link_inventory_by_part_number(self):
 		"""Auto-link inventory item by part number"""
@@ -267,7 +274,7 @@ def get_procurement_dashboard_data(status_filter=None, aircraft_filter=None):
 		filters=filters,
 		fields=[
 			'name', 'status', 'item_name', 'part_number', 'quantity',
-			'aircraft', 'urgency', 'supplier', 'notes', 'required_date',
+						'aircraft', 'urgency', 'supplier', 'notes', 'requested_by',
 			'creation_date', 'received_date', 'core_return_date',
 			'core_return_supplier', 'linked_inventory_item', 'po_number',
 			'creation', 'modified'

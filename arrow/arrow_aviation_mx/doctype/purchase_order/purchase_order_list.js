@@ -166,7 +166,7 @@ function quick_new_order() {
              options: '\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP\nGeneral'},
             {fieldname: 'urgency', fieldtype: 'Select', label: 'Urgency', default: 'Routine',
              options: 'Routine\nAOG'},
-            {fieldname: 'required_date', fieldtype: 'Date', label: 'Required By'},
+            {fieldname: 'requested_by', fieldtype: 'Data', label: 'Requested By', description: 'Auto-filled with your name, editable'},
             {fieldname: 'supplier', fieldtype: 'Link', options: 'Supplier', label: 'Supplier'},
             {fieldname: 'notes', fieldtype: 'Text', label: 'Notes'}
         ],
