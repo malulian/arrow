@@ -40,7 +40,7 @@ app_include_css = "/assets/arrow/css/amp.css"
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
-# page_js = {"page" : "public/js/file.js"}
+page_js = {"procurement_dashboard" : "arrow/arrow_aviation_mx/page/procurement_dashboard/procurement_dashboard.js"}
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
