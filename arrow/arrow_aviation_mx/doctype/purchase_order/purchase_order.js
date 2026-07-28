@@ -124,7 +124,7 @@ function add_workflow_buttons(frm) {
                 frm.save();
             }, __('Workflow'));
 
-            frm.add_custom_button(__('Reject'), function () {
+            frm.add_custom_button(__('❌ Reject'), function () {
                 frappe.confirm(
                     __('Are you sure you want to reject this order?'),
                     function () {
@@ -249,12 +249,12 @@ function add_action_buttons(frm) {
                     }
                 }
             });
-        }, __('Actions'));
+        });
 
         // Send RFQ to suppliers
         frm.add_custom_button(__('Send RFQ to Suppliers'), function () {
             send_rfq_dialog(frm);
-        }, __('Actions'));
+        });
     }
 
     // PO PDF - available after approval
@@ -277,7 +277,7 @@ function add_action_buttons(frm) {
                     }
                 }
             });
-        }, __('Actions'));
+        });
 
         if (frm.doc.po_pdf) {
             frm.add_custom_button(__('Send PO to Supplier'), function () {
@@ -299,7 +299,7 @@ function add_action_buttons(frm) {
                         }
                     }
                 });
-            }, __('Actions'));
+            });
         }
     }
 }

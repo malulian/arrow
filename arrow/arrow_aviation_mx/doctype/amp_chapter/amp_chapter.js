@@ -28,7 +28,7 @@ frappe.ui.form.on("AMP Chapter", {
 						}
 					},
 				});
-			}, __("Actions"));
+			});
 
 			// Add task note
 			frm.add_custom_button(__("Add Task Note"), function () {
@@ -36,7 +36,7 @@ frappe.ui.form.on("AMP Chapter", {
 					amp_document: frm.doc.amp_document,
 					chapter: frm.doc.name,
 				});
-			}, __("Actions"));
+			});
 
 			// Show task count for table-type chapters
 			let task_types = ["Task Table", "Component Table", "Checklist"];

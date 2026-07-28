@@ -35,14 +35,14 @@ frappe.ui.form.on("AMP Revision", {
 						});
 					}
 				);
-			}, __("Actions"));
+			});
 
 			// Submit for Review button
 			if (frm.doc.status === "Draft") {
 				frm.add_custom_button(__("Submit for Review"), function () {
 					frm.set_value("status", "Under Review");
 					frm.save();
-				}, __("Actions"));
+				});
 			}
 		}
 	},

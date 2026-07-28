@@ -10,6 +10,13 @@ class InventoryItem(Document):
 	def validate(self):
 		"""Validate and update status"""
 		self.update_status()
+		self.calculate_total_cost()
+	
+	def calculate_total_cost(self):
+		"""Calculate total cost = unit_price + shipping_cost safely"""
+		unit_price = float(getattr(self, 'unit_price', 0) or 0)
+		shipping_cost = float(getattr(self, 'shipping_cost', 0) or 0)
+		self.total_cost = round(unit_price + shipping_cost, 2)
 	
 	def update_status(self):
 		"""Update status based on quantity and expiry"""

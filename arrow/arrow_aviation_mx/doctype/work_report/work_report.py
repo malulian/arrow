@@ -8,14 +8,29 @@ from frappe.utils import today, now_datetime, time_diff_in_hours, get_time
 
 class WorkReport(Document):
 	def autoname(self):
-		"""Set report number"""
-		self.report_number = self.name
+		"""Naming handled by Frappe expression (WR-YYYY-#####)"""
+		pass
+
+	def before_save(self):
+		"""Set report_number after name is assigned"""
+		if self.is_new() and self.name:
+			self.report_number = self.name
 	
 	def validate(self):
 		"""Validate work report"""
 		self.calculate_total_hours()
+		self.calculate_part_line_totals()
 		self.validate_parts_availability()
 		self.check_duplicate_parts()
+	
+	def calculate_part_line_totals(self):
+		"""Calculate line_total for each part used"""
+		if not self.parts_used:
+			return
+		for part in self.parts_used:
+			unit_price = part.unit_price or 0
+			qty = part.quantity_used or 0
+			part.line_total = round(unit_price * qty, 2)
 	
 	def calculate_total_hours(self):
 		"""Calculate total hours from start and end time"""
@@ -128,6 +143,7 @@ class WorkReport(Document):
 		"""Actions on submit"""
 		self.deduct_parts_from_inventory()
 		self.send_parts_notification()
+		self.send_work_report_notification()
 	
 	def deduct_parts_from_inventory(self):
 		"""Deduct used parts from inventory"""
@@ -235,6 +251,191 @@ class WorkReport(Document):
 			)
 		except Exception as e:
 			frappe.log_error(f"Failed to send parts notification: {str(e)}", "Work Report Email")
+
+	def send_work_report_notification(self):
+		"""Send email notification with PDF when a new work report is submitted"""
+		# Get recipients from ARROW MX Settings
+		try:
+			settings = frappe.get_doc("ARROW MX Settings")
+			recipients = []
+			if settings.work_report_recipients:
+				for recipient in settings.work_report_recipients:
+					if recipient.email:
+						recipients.append(recipient.email)
+			
+			if not recipients:
+				# Fallback: no recipients configured, skip notification
+				return
+		except Exception:
+			# Settings not created yet, skip notification
+			return
+		
+		# Get technician full name
+		technician_name = frappe.db.get_value('User', self.technician, 'full_name') or self.technician
+		
+		# Build parts list HTML (with prices)
+		parts_html = ""
+		grand_total = 0
+		if self.parts_used and len(self.parts_used) > 0:
+			parts_html += """
+			<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%; margin-top: 5px;" dir="rtl">
+				<tr style="background: #f0f0f0;"><th>מספר חלק</th><th>כמות</th><th>מחיר יחידה</th><th>סה\"כ</th></tr>
+			"""
+			for part in self.parts_used:
+				part_number = part.part_number or 'N/A'
+				quantity = part.quantity_used or 0
+				unit_price = part.unit_price or 0
+				line_total = part.line_total or (unit_price * quantity)
+				grand_total += line_total
+				parts_html += f"<tr><td>{part_number}</td><td>{quantity}</td><td>₪{unit_price:,.2f}</td><td>₪{line_total:,.2f}</td></tr>"
+			parts_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים:</td><td>₪{grand_total:,.2f}</td></tr>'
+			parts_html += "</table>"
+		else:
+			parts_html = "<p>לא נצרכו חלקים</p>"
+		
+		# Build email message in Hebrew
+		message = f"""
+		<div dir="rtl" style="font-family: Arial, sans-serif;">
+			<p>שלום,</p>
+			
+			<p>התקבל דיווח עבודה חדש מספר: <strong>{self.name}</strong> על מטוס: <strong>{self.aircraft}</strong></p>
+			
+			<p>טכנאי: <strong>{technician_name}</strong></p>
+			
+			<p>כמות שעות עבודה: <strong>{self.total_hours_display or self.total_hours}</strong></p>
+			
+			<p>חלקים שנצרכו:</p>
+			{parts_html}
+			
+			<p><strong>סה"כ עלות חלקים: ₪{grand_total:,.2f}</strong></p>
+			
+			<p>מצורף דוח העבודה ב-PDF.</p>
+			
+			<p><a href="{frappe.utils.get_url_to_form('Work Report', self.name)}">לחץ כאן לצפייה בדוח</a></p>
+			
+			<p>בברכה,</p>
+			<p>Arrow Aviation MX System</p>
+		</div>
+		"""
+		
+		# Generate PDF
+		pdf_content = None
+		try:
+			from frappe.utils.pdf import get_pdf
+			
+			# Build PDF HTML
+			work_types = []
+			if self.oxygen_fill:
+				work_types.append("מילוי חמצן (Oxygen Fill)")
+			if self.nitrogen_fill:
+				work_types.append("מילוי חנקן (Nitrogen Fill)")
+			if self.tks_fill:
+				work_types.append("מילוי TKS")
+			if self.hydraulic_oil_fill:
+				work_types.append("מילוי שמן הידראולי (Hydraulic Oil)")
+			if self.gpu_usage:
+				work_types.append(f"GPU ({self.gpu_hours or 0} hours)")
+			if self.wi_di:
+				work_types.append("WI/DI")
+			
+			work_types_html = "<br>".join(work_types) if work_types else "לא צוין"
+			
+			parts_pdf_html = ""
+			pdf_grand_total = 0
+			if self.parts_used and len(self.parts_used) > 0:
+				parts_pdf_html = """
+				<table border="1" cellpadding="5" style="border-collapse: collapse; width: 100%;">
+					<tr style="background: #f5f5f5;"><th>מספר חלק</th><th>כמות</th><th>מחיר יחידה</th><th>סה"כ</th></tr>
+				"""
+				for part in self.parts_used:
+					p_unit_price = part.unit_price or 0
+					p_qty = part.quantity_used or 0
+					p_line_total = part.line_total or (p_unit_price * p_qty)
+					pdf_grand_total += p_line_total
+					parts_pdf_html += f"<tr><td>{part.part_number or 'N/A'}</td><td>{p_qty}</td><td>₪{p_unit_price:,.2f}</td><td>₪{p_line_total:,.2f}</td></tr>"
+				parts_pdf_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים:</td><td>₪{pdf_grand_total:,.2f}</td></tr>'
+				parts_pdf_html += "</table>"
+			else:
+				parts_pdf_html = "<p>לא נצרכו חלקים</p>"
+			
+			pdf_html = f"""
+			<!DOCTYPE html>
+			<html dir="rtl">
+			<head>
+				<style>
+					body {{ font-family: Arial, sans-serif; margin: 40px; }}
+					h1 {{ color: #333; border-bottom: 2px solid #333; padding-bottom: 10px; text-align: center; }}
+					.info-table {{ width: 100%; margin: 20px 0; }}
+					.info-table td {{ padding: 8px; border-bottom: 1px solid #ddd; }}
+					.label {{ font-weight: bold; width: 30%; }}
+					.section {{ margin: 20px 0; }}
+					.section-title {{ font-weight: bold; font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #333; }}
+					.signature-box {{ border: 1px solid #333; padding: 10px; min-height: 80px; margin-top: 10px; }}
+				</style>
+			</head>
+			<body>
+				<h1>דוח עבודה</h1>
+				
+				<table class="info-table">
+					<tr><td class="label">מספר דוח:</td><td>{self.name}</td></tr>
+					<tr><td class="label">תאריך עבודה:</td><td>{self.work_date}</td></tr>
+					<tr><td class="label">מטוס:</td><td>{self.aircraft}</td></tr>
+					<tr><td class="label">טכנאי:</td><td>{technician_name}</td></tr>
+					<tr><td class="label">שעת התחלה:</td><td>{self.start_time}</td></tr>
+					<tr><td class="label">שעת סיום:</td><td>{self.end_time}</td></tr>
+					<tr><td class="label">סה"כ שעות:</td><td>{self.total_hours_display or self.total_hours}</td></tr>
+				</table>
+				
+				<div class="section">
+					<div class="section-title">עבודה שבוצעה</div>
+					{work_types_html}
+				</div>
+				
+				<div class="section">
+					<div class="section-title">חלקים שנצרכו</div>
+					{parts_pdf_html}
+				</div>
+				
+				<div class="section">
+					<div class="section-title">הערות</div>
+					{self.notes or 'אין הערות'}
+				</div>
+				
+				<div class="section">
+					<div class="section-title">חתימת טכנאי</div>
+					<div class="signature-box">
+						{f'<img src="{self.signature}" style="max-height: 60px;">' if self.signature else 'לא נחתם'}
+					</div>
+				</div>
+			</body>
+			</html>
+			"""
+			
+			pdf_content = get_pdf(pdf_html)
+		except Exception as e:
+			frappe.log_error(f"Failed to generate PDF for {self.name}: {str(e)}", "Work Report PDF Error")
+		
+		# Send email
+		subject = f"דוח עבודה חדש: {self.name} - {self.aircraft}"
+		
+		try:
+			attachments = []
+			if pdf_content:
+				attachments.append({
+					'fname': f"Work_Report_{self.name}.pdf",
+					'fcontent': pdf_content
+				})
+			
+			frappe.sendmail(
+				recipients=recipients,
+				subject=subject,
+				message=message,
+				attachments=attachments,
+				reference_doctype='Work Report',
+				reference_name=self.name
+			)
+		except Exception as e:
+			frappe.log_error(f"Failed to send work report notification for {self.name}: {str(e)}", "Work Report Email Error")
 
 
 @frappe.whitelist()

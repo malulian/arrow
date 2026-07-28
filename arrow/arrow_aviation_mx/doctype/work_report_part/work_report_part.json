@@ -10,7 +10,10 @@
         "part_number",
         "available_quantity",
         "column_break_1",
-        "quantity_used"
+        "quantity_used",
+        "column_break_price",
+        "unit_price",
+        "line_total"
     ],
     "fields": [
         {
@@ -47,12 +50,35 @@
             "in_list_view": 1,
             "label": "Quantity Used",
             "reqd": 1
+        },
+        {
+            "fieldname": "column_break_price",
+            "fieldtype": "Column Break"
+        },
+        {
+            "depends_on": "eval:frappe.user.has_role('Price Manager')",
+            "fetch_from": "part.unit_price",
+            "fieldname": "unit_price",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Unit Price",
+            "read_only": 1,
+            "precision": "2"
+        },
+        {
+            "depends_on": "eval:frappe.user.has_role('Price Manager')",
+            "fieldname": "line_total",
+            "fieldtype": "Currency",
+            "in_list_view": 1,
+            "label": "Line Total",
+            "read_only": 1,
+            "precision": "2"
         }
     ],
     "index_web_pages_for_search": 1,
     "istable": 1,
     "links": [],
-    "modified": "2026-01-21 22:53:00.000000",
+    "modified": "2026-06-08 15:00:00.000000",
     "modified_by": "Administrator",
     "module": "Arrow Aviation MX",
     "name": "Work Report Part",

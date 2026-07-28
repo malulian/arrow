@@ -14,13 +14,13 @@ frappe.ui.form.on('Work Report', {
 
         // Add PDF buttons
         if (!frm.is_new()) {
-            frm.add_custom_button(__('Generate PDF'), function () {
+            frm.add_custom_button(__('📄 Generate PDF'), function () {
                 generate_pdf(frm);
-            }, __('Actions'));
+            });
 
             frm.add_custom_button(__('Send Report by Email'), function () {
                 send_by_email(frm);
-            }, __('Actions'));
+            });
         }
 
         // Show parts used summary

@@ -1,0 +1,60 @@
+{
+    "actions": [],
+    "creation": "2026-06-08 13:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "section_email_settings",
+        "work_report_recipients",
+        "section_defaults",
+        "default_aircraft"
+    ],
+    "fields": [
+        {
+            "fieldname": "section_email_settings",
+            "fieldtype": "Section Break",
+            "label": "Email Notification Settings"
+        },
+        {
+            "fieldname": "work_report_recipients",
+            "fieldtype": "Table",
+            "label": "Work Report Email Recipients",
+            "description": "List of email addresses to receive work report notifications",
+            "options": "Notification Recipient"
+        },
+        {
+            "fieldname": "section_defaults",
+            "fieldtype": "Section Break",
+            "label": "Default Settings"
+        },
+        {
+            "fieldname": "default_aircraft",
+            "fieldtype": "Select",
+            "label": "Default Aircraft",
+            "options": "\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP"
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "issingle": 1,
+    "links": [],
+    "modified": "2026-06-08 13:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "Arrow Aviation MX",
+    "name": "ARROW MX Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "print": 1,
+            "read": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+}

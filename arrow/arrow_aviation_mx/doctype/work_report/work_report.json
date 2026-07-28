@@ -127,19 +127,19 @@
             "default": "0",
             "fieldname": "oxygen_fill",
             "fieldtype": "Check",
-            "label": "מילוי חמצן (Oxygen Fill)"
+            "label": "\u05de\u05d9\u05dc\u05d5\u05d9 \u05d7\u05de\u05e6\u05df (Oxygen Fill)"
         },
         {
             "default": "0",
             "fieldname": "nitrogen_fill",
             "fieldtype": "Check",
-            "label": "מילוי חנקן (Nitrogen Fill)"
+            "label": "\u05de\u05d9\u05dc\u05d5\u05d9 \u05d7\u05e0\u05e7\u05df (Nitrogen Fill)"
         },
         {
             "default": "0",
             "fieldname": "tks_fill",
             "fieldtype": "Check",
-            "label": "מילוי TKS"
+            "label": "\u05de\u05d9\u05dc\u05d5\u05d9 TKS"
         },
         {
             "fieldname": "column_break_work_type",
@@ -149,7 +149,7 @@
             "default": "0",
             "fieldname": "hydraulic_oil_fill",
             "fieldtype": "Check",
-            "label": "מילוי שמן הידראולי (Hydraulic Oil)"
+            "label": "\u05de\u05d9\u05dc\u05d5\u05d9 \u05e9\u05de\u05df \u05d4\u05d9\u05d3\u05e8\u05d0\u05d5\u05dc\u05d9 (Hydraulic Oil)"
         },
         {
             "default": "0",
@@ -218,7 +218,7 @@
     "index_web_pages_for_search": 1,
     "is_submittable": 1,
     "links": [],
-    "modified": "2026-02-24 12:00:00.000000",
+    "modified": "2026-06-08 15:00:00.000000",
     "modified_by": "Administrator",
     "module": "Arrow Aviation MX",
     "name": "Work Report",

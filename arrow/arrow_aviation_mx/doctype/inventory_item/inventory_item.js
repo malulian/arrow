@@ -1,5 +1,30 @@
 frappe.ui.form.on('Inventory Item', {
+    part_number: function(frm) {
+        if (frm.doc.part_number && frm.doc.part_number.trim() !== "") {
+            let filters = { part_number: frm.doc.part_number.trim() };
+            if (!frm.is_new()) {
+                filters.name = ['!=', frm.doc.name];
+            }
+            frappe.db.get_list('Inventory Item', {
+                filters: filters,
+                fields: ['name'],
+                limit: 1
+            }).then(res => {
+                if (res && res.length > 0) {
+                    frappe.msgprint({
+                        title: __('Duplicate Part Number'),
+                        indicator: 'orange',
+                        message: __(`A record with this Part Number already exists (e.g., <b>${res[0].name}</b>). Multiple records with the same Part Number are allowed, but please verify this is intentional.`)
+                    });
+                }
+            }).catch(err => {
+                console.error("Error checking part number:", err);
+            });
+        }
+    },
+
     refresh: function (frm) {
+
         // Set status indicator
         set_status_indicator(frm);
 

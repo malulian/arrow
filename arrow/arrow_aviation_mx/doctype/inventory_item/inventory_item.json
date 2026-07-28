@@ -28,6 +28,11 @@
         "last_received_date",
         "last_withdrawal_date",
         "section_break_notes",
+        "section_break_pricing",
+        "unit_price",
+        "shipping_cost",
+        "column_break_pricing",
+        "total_cost",
         "notes"
     ],
     "fields": [
@@ -42,7 +47,8 @@
             "in_list_view": 1,
             "in_standard_filter": 1,
             "label": "Item Name",
-            "reqd": 1
+            "reqd": 1,
+            "search_index": 1
         },
         {
             "fieldname": "part_number",
@@ -51,7 +57,7 @@
             "in_standard_filter": 1,
             "label": "Part Number (P/N)",
             "reqd": 1,
-            "unique": 1
+            "search_index": 1
         },
         {
             "fieldname": "alternate_pn",
@@ -159,6 +165,36 @@
             "fieldname": "notes",
             "fieldtype": "Text",
             "label": "Notes"
+        },
+        {
+            "fieldname": "section_break_pricing",
+            "fieldtype": "Section Break",
+            "label": "Pricing",
+            "permlevel": 1
+        },
+        {
+            "fieldname": "unit_price",
+            "fieldtype": "Currency",
+            "label": "Unit Price",
+            "permlevel": 1
+        },
+        {
+            "fieldname": "shipping_cost",
+            "fieldtype": "Currency",
+            "label": "Shipping Cost",
+            "permlevel": 1
+        },
+        {
+            "fieldname": "column_break_pricing",
+            "fieldtype": "Column Break",
+            "permlevel": 1
+        },
+        {
+            "fieldname": "total_cost",
+            "fieldtype": "Currency",
+            "label": "Total Cost",
+            "read_only": 1,
+            "permlevel": 1
         }
     ],
     "index_web_pages_for_search": 1,

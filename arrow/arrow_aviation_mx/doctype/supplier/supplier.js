@@ -82,7 +82,7 @@ frappe.ui.form.on('Supplier', {
                     }
                 });
                 d.show();
-            }, __('Actions'));
+            });
         }
     },
 

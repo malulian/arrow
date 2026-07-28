@@ -30,19 +30,19 @@ frappe.ui.form.on("AMP Document", {
 						}
 					},
 				});
-			}, __("Actions"));
+			});
 
 			// Create New Revision button
 			frm.add_custom_button(__("Create New Revision"), function () {
 				create_revision_dialog(frm);
-			}, __("Actions"));
+			});
 
 			// Add Task Note button
 			frm.add_custom_button(__("Add Task Note"), function () {
 				frappe.new_doc("AMP Task Note", {
 					amp_document: frm.doc.name,
 				});
-			}, __("Actions"));
+			});
 
 			// Update Revision Info button
 			frm.add_custom_button(__("Update Revision Info"), function () {
@@ -57,7 +57,7 @@ frappe.ui.form.on("AMP Document", {
 						});
 					},
 				});
-			}, __("Actions"));
+			});
 
 			// Show linked records in dashboard
 			frm.dashboard.add_indicator(
