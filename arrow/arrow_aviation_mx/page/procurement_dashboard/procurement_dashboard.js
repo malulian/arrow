@@ -1,11 +1,14 @@
 // Procurement Dashboard — direct DOM injection (no make_app_page needed)
 
 (function() {
-    var wrapper = document.querySelector('.page-content .layout-main-section');
+    var wrapper = document.getElementById('page-procurement_dashboard');
     if (!wrapper) {
-        wrapper = document.querySelector('.layout-main-section');
+        wrapper = document.querySelector('.page-content .layout-main-section') || document.querySelector('.layout-main-section');
     }
     if (!wrapper) return;
+
+    // Make sure it's visible
+    wrapper.style.display = 'block';
 
     // State
     var currentFilter = 'All';
