@@ -148,7 +148,8 @@
             "in_standard_filter": 1,
             "label": "Aircraft / General Inventory",
             "options": "\n4X-CNZ\n4X-CUT\n4X-CZF\n4X-CRZ\n4X-CUZ\n4X-CZH\nN510SP\nGeneral",
-            "reqd": 1
+            "reqd": 1,
+            "in_list_view": 1
         },
         {
             "fieldname": "approved_by_user",
@@ -381,7 +382,8 @@
             "fieldname": "supplier",
             "fieldtype": "Link",
             "label": "Supplier",
-            "options": "Supplier"
+            "options": "Supplier",
+            "in_standard_filter": 1
         },
         {
             "fieldname": "section_break_core",
@@ -434,9 +436,9 @@
             "write": 1
         }
     ],
-    "search_fields": "item_name,part_number,status,aircraft",
+    "search_fields": "item_name,part_number,status,aircraft,supplier",
     "show_name_in_global_search": 1,
-    "sort_field": "modified",
+    "sort_field": "creation",
     "sort_order": "DESC",
     "states": [
         {
@@ -461,5 +463,21 @@
         }
     ],
     "title_field": "item_name",
-    "track_changes": 1
+    "track_changes": 1,
+    "default_view": "List",
+    "listview_settings": {
+        "fields": [
+            "status",
+            "part_number",
+            "item_name",
+            "quantity",
+            "aircraft",
+            "urgency",
+            "supplier",
+            "creation_date"
+        ],
+        "sort_by": "creation",
+        "sort_order": "desc",
+        "page_length": 50
+    }
 }

@@ -1,3 +1,5 @@
+// Purchase Order Form View — simplified, quick actions
+
 frappe.ui.form.on('Purchase Order', {
     refresh: function (frm) {
         // Set status indicator
@@ -12,7 +14,7 @@ frappe.ui.form.on('Purchase Order', {
             frm.page.set_indicator(frm.doc.status, statusColors[frm.doc.status]);
         }
 
-        // Quick action buttons based on status
+        // Add quick action buttons
         add_quick_actions(frm);
     },
 
@@ -24,11 +26,20 @@ frappe.ui.form.on('Purchase Order', {
 
     status: function (frm) {
         frm.trigger('refresh');
+    },
+
+    // Auto-set received_date when status changes to Received
+    status: function(frm) {
+        if (frm.doc.status === 'Received' && !frm.doc.received_date) {
+            frm.set_value('received_date', frappe.datetime.get_today());
+        }
+        if (frm.doc.status === 'Core Returned' && !frm.doc.core_return_date) {
+            frm.set_value('core_return_date', frappe.datetime.get_today());
+        }
     }
 });
 
 function add_quick_actions(frm) {
-    // Remove existing custom buttons
     frm.page.clear_custom_buttons();
 
     if (frm.doc.__islocal) return;
@@ -51,16 +62,14 @@ function add_quick_actions(frm) {
                             notes: values.notes || undefined
                         },
                         callback: function(r) {
-                            if (r.message && r.message.success) {
-                                frm.reload_doc();
-                            }
+                            if (r.message && r.message.success) frm.reload_doc();
                         }
                     });
                 },
                 'Mark as Ordered',
                 'Confirm'
             );
-        });
+        }).addClass('btn-primary');
     }
 
     if (status === 'Ordered') {
@@ -69,12 +78,10 @@ function add_quick_actions(frm) {
                 method: 'arrow.arrow_aviation_mx.doctype.purchase_order.purchase_order.mark_received',
                 args: { po_name: frm.doc.name },
                 callback: function(r) {
-                    if (r.message && r.message.success) {
-                        frm.reload_doc();
-                    }
+                    if (r.message && r.message.success) frm.reload_doc();
                 }
             });
-        });
+        }).addClass('btn-success');
     }
 
     if (status === 'Received') {
@@ -95,9 +102,7 @@ function add_quick_actions(frm) {
                             core_return_notes: values.core_return_notes
                         },
                         callback: function(r) {
-                            if (r.message && r.message.success) {
-                                frm.reload_doc();
-                            }
+                            if (r.message && r.message.success) frm.reload_doc();
                         }
                     });
                 },
@@ -108,23 +113,16 @@ function add_quick_actions(frm) {
     }
 
     if (status !== 'Cancelled' && status !== 'Core Returned') {
-        frm.add_custom_button(__('✖ Cancel Order'), function() {
-            frappe.confirm(`Cancel PO ${frm.doc.name}?`, function() {
+        frm.add_custom_button(__('✖ Cancel'), function() {
+            frappe.confirm('Cancel PO ' + frm.doc.name + '?', function() {
                 frappe.call({
                     method: 'arrow.arrow_aviation_mx.doctype.purchase_order.purchase_order.cancel_order',
                     args: { po_name: frm.doc.name },
                     callback: function(r) {
-                        if (r.message && r.message.success) {
-                            frm.reload_doc();
-                        }
+                        if (r.message && r.message.success) frm.reload_doc();
                     }
                 });
             });
         }).addClass('btn-danger');
     }
-
-    // Link to procurement dashboard
-    frm.add_custom_button(__('📋 Dashboard'), function() {
-        frappe.set_route('procurement-dashboard');
-    }).addClass('btn-default');
 }
