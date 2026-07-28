@@ -42,6 +42,64 @@ class InventoryItem(Document):
 				indicator="orange"
 			)
 
+	def on_update(self):
+		"""After save — auto-update linked Purchase Orders to Received"""
+		self._auto_receive_linked_pos()
+
+	def _auto_receive_linked_pos(self):
+		"""
+		When inventory quantity increases (item received into stock),
+		auto-update any linked Purchase Order from 'Ordered' to 'Received'.
+		"""
+		if not self.part_number:
+			return
+
+		# Only trigger if quantity changed (increased)
+		if self.get_doc_before_save():
+			old_qty = self.get_doc_before_save().quantity or 0
+		else:
+			old_qty = 0
+
+		if (self.quantity or 0) <= old_qty:
+			return  # Quantity didn't increase, skip
+
+		# Find POs linked to this inventory item that are in 'Ordered' status
+		linked_pos = frappe.get_all(
+			'Purchase Order',
+			filters={
+				'status': 'Ordered',
+				'linked_inventory_item': self.name
+			},
+			fields=['name']
+		)
+
+		# Also find by part_number if no linked_inventory_item
+		if not linked_pos:
+			linked_pos = frappe.get_all(
+				'Purchase Order',
+				filters={
+					'status': 'Ordered',
+					'part_number': self.part_number
+				},
+				fields=['name']
+			)
+
+		for po_data in linked_pos:
+			try:
+				po = frappe.get_doc('Purchase Order', po_data['name'])
+				po.db_set('status', 'Received', notify=False)
+				po.db_set('received_date', today(), notify=False)
+				po.db_set('linked_inventory_item', self.name, notify=False)
+				
+				# Send WhatsApp + email notification
+				po.send_status_email('Ordered')
+				po.send_whatsapp_notification('Ordered')
+			except Exception as e:
+				frappe.log_error(
+					f"Failed to auto-receive PO {po_data['name']}: {str(e)}",
+					"Auto-Receive PO"
+				)
+
 
 @frappe.whitelist()
 def receive_item(item_name, quantity, notes=None, reference_doctype=None, reference_name=None):

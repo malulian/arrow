@@ -20,6 +20,9 @@
         "quantity",
         "column_break_item",
         "aircraft",
+        "urgency",
+        "required_date",
+        "supplier",
         "approved_by_user",
         "market_price",
         "section_break_inventory",
@@ -58,7 +61,12 @@
         "additional_documents",
         "total_landed_cost",
         "section_break_notes",
-        "notes"
+        "notes",
+        "section_break_core",
+        "core_return_date",
+        "column_break_core",
+        "core_return_supplier",
+        "core_return_notes"
     ],
     "fields": [
         {
@@ -75,13 +83,13 @@
             "unique": 1
         },
         {
-            "default": "New Order",
+            "default": "New",
             "fieldname": "status",
             "fieldtype": "Select",
             "in_list_view": 1,
             "in_standard_filter": 1,
             "label": "Status",
-            "options": "New Order\nAwaiting Approval\nApproved\nOrdered\nSent\nReceived\nPending Inspection\nCompleted\nCancelled",
+            "options": "New\nOrdered\nReceived\nCore Returned\nCancelled",
             "reqd": 1
         },
         {
@@ -147,7 +155,7 @@
             "fieldtype": "Link",
             "label": "Approver",
             "options": "User",
-            "reqd": 1
+            "reqd": 0
         },
         {
             "fieldname": "market_price",
@@ -194,7 +202,7 @@
             "options": "<div id=\"quotes_warning\"></div>"
         },
         {
-            "depends_on": "eval:['Awaiting Approval', 'Approved', 'Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Received', 'Core Returned'].includes(doc.status)",
             "fieldname": "section_break_approval",
             "fieldtype": "Section Break",
             "label": "Approval Details"
@@ -234,7 +242,7 @@
             "read_only": 1
         },
         {
-            "depends_on": "eval:['Approved', 'Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Received', 'Core Returned'].includes(doc.status)",
             "fieldname": "section_break_po",
             "fieldtype": "Section Break",
             "label": "Purchase Order Document"
@@ -250,7 +258,7 @@
             "label": "PO Document (PDF)"
         },
         {
-            "depends_on": "eval:['Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Received', 'Core Returned'].includes(doc.status)",
             "fieldname": "section_break_tracking",
             "fieldtype": "Section Break",
             "label": "Shipping & Tracking"
@@ -282,7 +290,7 @@
             "label": "Shipment Reference"
         },
         {
-            "depends_on": "eval:['Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Received', 'Core Returned'].includes(doc.status)",
             "fieldname": "section_break_receiving",
             "fieldtype": "Section Break",
             "label": "Receiving & Inspection"
@@ -314,7 +322,7 @@
             "label": "Inspection Notes"
         },
         {
-            "depends_on": "eval:['Ordered', 'Sent', 'Received', 'Pending Inspection', 'Completed'].includes(doc.status)",
+            "depends_on": "eval:['Ordered', 'Received', 'Core Returned'].includes(doc.status)",
             "fieldname": "section_break_invoice",
             "fieldtype": "Section Break",
             "label": "Documents & Invoice"
@@ -354,6 +362,53 @@
             "fieldname": "notes",
             "fieldtype": "Text Editor",
             "label": "Notes"
+        },
+        {
+            "fieldname": "urgency",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Urgency",
+            "options": "\nRoutine\nAOG",
+            "default": "Routine"
+        },
+        {
+            "fieldname": "required_date",
+            "fieldtype": "Date",
+            "label": "Required By"
+        },
+        {
+            "fieldname": "supplier",
+            "fieldtype": "Link",
+            "label": "Supplier",
+            "options": "Supplier"
+        },
+        {
+            "fieldname": "section_break_core",
+            "fieldtype": "Section Break",
+            "label": "Core Return",
+            "collapsible": 1,
+            "depends_on": "eval:['Received', 'Core Returned'].includes(doc.status)"
+        },
+        {
+            "fieldname": "core_return_date",
+            "fieldtype": "Date",
+            "label": "Core Return Date"
+        },
+        {
+            "fieldname": "column_break_core",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "core_return_supplier",
+            "fieldtype": "Link",
+            "label": "Core Returned To",
+            "options": "Supplier"
+        },
+        {
+            "fieldname": "core_return_notes",
+            "fieldtype": "Small Text",
+            "label": "Core Return Notes"
         }
     ],
     "index_web_pages_for_search": 1,
@@ -386,35 +441,19 @@
     "states": [
         {
             "color": "blue",
-            "title": "New Order"
-        },
-        {
-            "color": "orange",
-            "title": "Awaiting Approval"
-        },
-        {
-            "color": "green",
-            "title": "Approved"
+            "title": "New"
         },
         {
             "color": "purple",
             "title": "Ordered"
         },
         {
-            "color": "cyan",
-            "title": "Sent"
-        },
-        {
-            "color": "blue",
+            "color": "green",
             "title": "Received"
         },
         {
-            "color": "yellow",
-            "title": "Pending Inspection"
-        },
-        {
-            "color": "green",
-            "title": "Completed"
+            "color": "darkgrey",
+            "title": "Core Returned"
         },
         {
             "color": "red",

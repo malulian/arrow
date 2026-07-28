@@ -148,23 +148,11 @@ app_include_css = "/assets/arrow/css/amp.css"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"arrow.tasks.all"
-# 	],
-# 	"daily": [
-# 		"arrow.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"arrow.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"arrow.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"arrow.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"weekly": [
+		"arrow.arrow_aviation_mx.api.whatsapp.send_weekly_digest"
+	]
+}
 
 # Testing
 # -------
