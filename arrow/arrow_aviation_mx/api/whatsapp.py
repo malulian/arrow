@@ -60,7 +60,7 @@ def send_whatsapp_message(message):
 		# Send as email fallback
 		try:
 			frappe.sendmail(
-				recipients=["oshermalul@gmail.com"],
+				recipients=["noa992250@gmail.com", "oshermalul@gmail.com"],
 				subject="WhatsApp Notification (fallback)",
 				message=f"<pre>{message}</pre>"
 			)
