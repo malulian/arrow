@@ -85,6 +85,15 @@ class InventoryItem(Document):
 			)
 
 		for po_data in linked_pos:
+			# If an active Purchase Order Receiving record exists for this PO,
+			# the receiving workflow is authoritative — do NOT auto-close.
+			active_receiving = frappe.db.get_value(
+				'Purchase Order Receiving',
+				{'purchase_order': po_data['name'], 'status': ['!=', 'Received']},
+				'name'
+			)
+			if active_receiving:
+				continue
 			try:
 				po = frappe.get_doc('Purchase Order', po_data['name'])
 				po.db_set('status', 'Received', notify=False)

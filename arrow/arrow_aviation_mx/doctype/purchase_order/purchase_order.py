@@ -150,6 +150,17 @@ class PurchaseOrder(Document):
 		"""Get email recipients — sends to Noa's email for WhatsApp relay"""
 		return ['noa992250@gmail.com']
 
+	def _auto_create_receiving(self):
+		"""Auto-create (idempotent) a Purchase Order Receiving record for this order."""
+		try:
+			from arrow.arrow_aviation_mx.doctype.purchase_order_receiving.purchase_order_receiving import create_receiving_for_po
+			create_receiving_for_po(self.name)
+		except Exception as e:
+			frappe.log_error(
+				f"Failed to auto-create receiving for {self.name}: {str(e)}",
+				"Auto Receiving"
+			)
+
 	def handle_item_received(self):
 		"""When item is received — update inventory"""
 		if not self.part_number:
@@ -176,14 +187,28 @@ class PurchaseOrder(Document):
 			self.linked_inventory_item = inv_doc.name
 
 	def on_update(self):
-		"""After save — trigger auto-received check"""
+		"""After save — trigger receiving creation + auto-received check"""
+		if self.status == 'Ordered':
+			self._auto_create_receiving()
 		self._check_auto_received()
 
 	def _check_auto_received(self):
-		"""Check if linked inventory item has been restocked → auto-set Received"""
+		"""Legacy auto-received shortcut. Skip whenever an active Purchase Order
+		Receiving record exists — the receiving workflow is now authoritative and
+		must be followed (so a pre-existing on-hand qty doesn't auto-close the PO
+		before the actual receipt is confirmed)."""
 		if self.status != 'Ordered':
 			return
 		if not self.linked_inventory_item:
+			return
+		# If a receiving record exists (awaiting or still open), let the
+		# receiving workflow own this PO — do not auto-close.
+		active_receiving = frappe.db.get_value(
+			'Purchase Order Receiving',
+			{'purchase_order': self.name, 'status': ['!=', 'Received']},
+			'name'
+		)
+		if active_receiving:
 			return
 		inv = frappe.db.get_value('Inventory Item', self.linked_inventory_item, 'quantity')
 		if inv and inv > 0:

@@ -89,7 +89,7 @@
             "in_list_view": 1,
             "in_standard_filter": 1,
             "label": "Status",
-            "options": "New\nOrdered\nReceived\nCore Returned\nCancelled",
+            "options": "New\nOrdered\nPartially Received\nReceived\nCore Returned\nCancelled",
             "reqd": 1
         },
         {
