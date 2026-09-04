@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Arrow",
  "links": [],
- "modified": "2026-01-21 23:11:07.995539",
+ "modified": "2026-09-04 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Arrow Aviation MX",
  "name": "Arrow",
@@ -25,6 +25,11 @@
   {
    "document_type": "Supplier",
    "label": "Suppliers",
+   "quick_list_filter": "[]"
+  },
+  {
+   "document_type": "Purchase Order Receiving",
+   "label": "Purchase Order Receiving",
    "quick_list_filter": "[]"
   },
   {
