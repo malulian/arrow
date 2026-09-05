@@ -28,6 +28,7 @@
         "section_break_receiving",
         "received_quantity",
         "receiving_applied",
+        "applied_quantity",
         "received_location",
         "column_break_receiving",
         "received_part_number",
@@ -162,6 +163,13 @@
             "fieldname": "receiving_applied",
             "fieldtype": "Check",
             "label": "Receiving Applied",
+            "read_only": 1
+        },        {
+            "default": "0",
+            "description": "Cumulative quantity already applied to inventory stock",
+            "fieldname": "applied_quantity",
+            "fieldtype": "Float",
+            "label": "Applied Quantity",
             "read_only": 1
         },
         {

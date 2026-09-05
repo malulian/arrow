@@ -32,14 +32,31 @@ from frappe.utils import today, now_datetime
 
 class PurchaseOrderReceiving(Document):
 	def validate(self):
+		self._validate_part_number()
 		self._refresh_current_stock()
-		# Auto-apply the receiving if a real quantity was entered by the user
-		# and this record hasn't been applied yet. This makes the flow work both
-		# from the "Confirm Receipt" button and from plain form saves.
+		# Auto-apply the receiving if a real (cumulative) quantity was entered by
+		# the user and it differs from what was already applied to stock.
+		# This makes the flow work both from the "Confirm Receipt" button and
+		# from plain form saves, AND supports multi-delivery partial receipts:
+		# a second confirm with a larger cumulative total applies only the delta.
 		qty = _as_float(self.get("received_quantity"))
-		if (qty and qty > 0 and not self.receiving_applied
-				and self.status in ("Awaiting Receipt", "Partially Received")):
-			self._apply_receiving(qty)
+		applied = _as_float(self.get("applied_quantity"))
+		if (qty and qty > 0 and qty != applied
+			and self.status in ("Awaiting Receipt", "Partially Received", "Discrepancy")):
+			self._apply_receiving(qty, applied)
+
+	def _validate_part_number(self):
+		"""Verify the received P/N against the ordered P/N on every save path."""
+		incoming_pn = (self.get("received_part_number") or '').strip().lower()
+		expected_pn = (self.part_number or '').strip().lower()
+		if (expected_pn and incoming_pn and self.status != 'Received'
+				and incoming_pn != expected_pn):
+			frappe.throw(
+				_('Received P/N "{0}" does not match the ordered P/N "{1}". '
+				  'Verify the part before confirming.').format(
+					self.received_part_number, self.part_number
+				)
+			)
 
 	def _refresh_current_stock(self):
 		"""Pull current on-hand qty + location from the linked inventory item."""
@@ -56,9 +73,18 @@ class PurchaseOrderReceiving(Document):
 			self.current_location = inv.location or ''
 			self.inventory_item_status = inv.status or ''
 
-	def _apply_receiving(self, qty):
-		"""Apply actual receipt: update stock, record transaction, reconcile PO."""
+	def _apply_receiving(self, qty, already_applied=0.0):
+		"""Apply actual receipt: update stock, record transaction, reconcile PO.
+
+		`qty` is the CUMULATIVE total received so far; `already_applied` is what
+		was previously applied to stock. Only the delta hits inventory, so a
+		partial receipt followed by the remainder produces two Inventory
+		Transactions and the correct total on-hand quantity.
+		"""
 		if not self.purchase_order:
+			return
+		delta = qty - (already_applied or 0.0)
+		if delta <= 0:
 			return
 
 		# ---- Load / create the inventory item ----
@@ -81,18 +107,18 @@ class PurchaseOrderReceiving(Document):
 		# Update via db_set to avoid re-entering InventoryItem.on_update
 		# (its legacy auto-receive would otherwise loop back into this flow).
 		frappe.db.set_value('Inventory Item', inv_name, {
-			'quantity': old_qty + qty,
+			'quantity': old_qty + delta,
 			'location': self.received_location or inv.location or '',
 			'last_received_date': today(),
 		})
 		inv.reload()
 
-		# ---- Record inventory transaction ----
+		# ---- Record inventory transaction (only the newly arrived delta) ----
 		frappe.get_doc({
 			'doctype': 'Inventory Transaction',
 			'inventory_item': inv_name,
 			'transaction_type': 'Receive',
-			'quantity': qty,
+			'quantity': delta,
 			'date': now_datetime(),
 			'performed_by': self.received_by or frappe.session.user,
 			'reference_doctype': 'Purchase Order Receiving',
@@ -108,6 +134,7 @@ class PurchaseOrderReceiving(Document):
 		ordered_qty = _as_float(self.get('ordered_quantity'))
 		deviation = qty != ordered_qty
 		partial = qty < ordered_qty
+		self.applied_quantity = qty
 		self.receiving_applied = 1
 
 		if deviation:
@@ -147,16 +174,7 @@ def confirm_receipt(
 	if qty <= 0:
 		frappe.throw(_('Quantity received must be greater than zero.'))
 
-	# ---- P/N verification (item-level correctness) ----
-	incoming_pn = (received_part_number or rcv.part_number or '').strip().lower()
-	expected_pn = (rcv.part_number or '').strip().lower()
-	if expected_pn and incoming_pn and incoming_pn != expected_pn:
-		frappe.throw(
-			_('Received P/N "{0}" does not match the ordered P/N "{1}". '
-			  'Verify the part before confirming.').format(
-				received_part_number, rcv.part_number
-			)
-		)
+	# ---- P/N verification happens in validate() (shared with plain saves) ----
 
 	rcv.received_quantity = qty
 	if received_location:
