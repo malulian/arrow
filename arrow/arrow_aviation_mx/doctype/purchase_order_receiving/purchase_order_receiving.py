@@ -112,6 +112,11 @@ class PurchaseOrderReceiving(Document):
 			'last_received_date': today(),
 		})
 		inv.reload()
+		# db_set bypasses InventoryItem.validate() -> update_status(), so the stored
+		# status stays stale: a new item is inserted at qty 0 ('Out of Stock') and
+		# the receipt that follows never refreshes it. Recompute + persist explicitly.
+		inv.update_status()
+		frappe.db.set_value('Inventory Item', inv_name, 'status', inv.status)
 
 		# ---- Record inventory transaction (only the newly arrived delta) ----
 		frappe.get_doc({
