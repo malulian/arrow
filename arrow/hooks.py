@@ -151,7 +151,12 @@ doctype_list_js = {"Purchase Order" : "arrow/arrow_aviation_mx/doctype/purchase_
 scheduler_events = {
 	"weekly": [
 		"arrow.arrow_aviation_mx.api.whatsapp.send_weekly_digest"
-	]
+	],
+	"cron": {
+		"0 7 1 * *": [
+			"arrow.arrow_aviation_mx.monthly_report.send_monthly_reports"
+		]
+	}
 }
 
 # Testing

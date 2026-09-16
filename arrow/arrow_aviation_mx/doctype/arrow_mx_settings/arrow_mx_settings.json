@@ -6,6 +6,8 @@
     "field_order": [
         "section_email_settings",
         "work_report_recipients",
+        "monthly_report_mode",
+        "monthly_report_recipients",
         "section_defaults",
         "default_aircraft"
     ],
@@ -20,6 +22,20 @@
             "fieldtype": "Table",
             "label": "Work Report Email Recipients",
             "description": "List of email addresses to receive work report notifications",
+            "options": "Notification Recipient"
+        },
+        {
+            "fieldname": "monthly_report_mode",
+            "fieldtype": "Check",
+            "label": "Monthly Consolidated Report Mode",
+            "description": "When ON: per-report submit emails are skipped; one consolidated xlsx per aircraft is emailed monthly (1st, 07:00). Default OFF.",
+            "default": "0"
+        },
+        {
+            "fieldname": "monthly_report_recipients",
+            "fieldtype": "Table",
+            "label": "Monthly Report Email Recipients",
+            "description": "Recipients of the monthly consolidated aircraft report. Falls back to Work Report Email Recipients when empty.",
             "options": "Notification Recipient"
         },
         {

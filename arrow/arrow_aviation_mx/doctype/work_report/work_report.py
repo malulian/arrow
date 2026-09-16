@@ -142,8 +142,20 @@ class WorkReport(Document):
 	def on_submit(self):
 		"""Actions on submit"""
 		self.deduct_parts_from_inventory()
+		if self._monthly_report_mode():
+			# Monthly consolidated mode: skip per-report emails; one xlsx
+			# per aircraft is emailed by the monthly scheduler instead.
+			return
 		self.send_parts_notification()
 		self.send_work_report_notification()
+
+	@staticmethod
+	def _monthly_report_mode():
+		"""True when ARROW MX Settings.monthly_report_mode is ON (default OFF)."""
+		try:
+			return bool(frappe.db.get_single_value("ARROW MX Settings", "monthly_report_mode"))
+		except Exception:
+			return False
 	
 	def deduct_parts_from_inventory(self):
 		"""Deduct used parts from inventory"""
