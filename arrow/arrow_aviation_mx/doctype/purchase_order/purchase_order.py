@@ -2,10 +2,8 @@
 # For license information, please see license.txt
 
 import frappe
-import json
-import requests
 from frappe.model.document import Document
-from frappe.utils import now_datetime, today, getdate
+from frappe.utils import today
 
 
 class PurchaseOrder(Document):
@@ -37,118 +35,18 @@ class PurchaseOrder(Document):
 				self.linked_inventory_item = inventory_item
 
 	def before_save(self):
-		"""Actions before saving — fire notifications on status change"""
+		"""Apply non-notification state changes before persistence."""
 		if self.has_value_changed('status'):
 			self.handle_status_change()
 
 	def handle_status_change(self):
-		"""Handle status change actions: email + WhatsApp"""
-		old_status = self.get_doc_before_save().status if self.get_doc_before_save() else None
-
-		# Send email notification
-		self.send_status_email(old_status)
-
-		# Send WhatsApp notification
-		self.send_whatsapp_notification(old_status)
-
-		# Handle received status
+		"""Handle PO state changes; Hermes receives alerts via Frappe Webhooks."""
 		if self.status == 'Received':
 			self.received_date = self.received_date or today()
 			self.handle_item_received()
 
-		# Handle core returned
-		if self.status == 'Core Returned':
-			if not self.core_return_date:
-				self.core_return_date = today()
-
-	def send_status_email(self, old_status=None):
-		"""Send email notification on status change"""
-		recipients = self._get_notification_recipients()
-		if not recipients:
-			return
-
-		status_emoji = {
-			'New': '🆕',
-			'Ordered': '📦',
-			'Received': '✅',
-			'Core Returned': '♻️',
-			'Cancelled': '❌'
-		}
-
-		emoji = status_emoji.get(self.status, '📋')
-		subject = f"{emoji} PO {self.name} — {self.status}"
-		
-		message = f"""
-		<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-			<h2 style="color: #333; border-bottom: 2px solid #333; padding-bottom: 10px;">
-				{emoji} Purchase Order {self.name} — {self.status}
-			</h2>
-			<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
-				<tr><td style="padding: 6px 0; font-weight: bold; width: 40%;">Item:</td><td>{self.item_name}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Part Number:</td><td>{self.part_number}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Quantity:</td><td>{self.quantity}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Aircraft:</td><td>{self.aircraft or 'N/A'}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Urgency:</td><td>{self.urgency or 'Routine'}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Supplier:</td><td>{self.supplier or 'N/A'}</td></tr>
-				<tr><td style="padding: 6px 0; font-weight: bold;">Notes:</td><td>{self.notes or 'N/A'}</td></tr>
-			</table>
-			<p><a href="{frappe.utils.get_url_to_form('Purchase Order', self.name)}">View order in system</a></p>
-		</div>
-		"""
-
-		try:
-			frappe.sendmail(
-				recipients=recipients,
-				subject=subject,
-				message=message,
-				reference_doctype='Purchase Order',
-				reference_name=self.name
-			)
-		except Exception as e:
-			frappe.log_error(f"Failed to send PO status email: {str(e)}", "Purchase Order Email")
-
-	def send_whatsapp_notification(self, old_status=None):
-		"""Send WhatsApp notification via Hermes gateway webhook"""
-		try:
-			from arrow.arrow_aviation_mx.api.whatsapp import send_whatsapp_message
-			send_whatsapp_message(self._build_whatsapp_message(old_status))
-		except Exception as e:
-			frappe.log_error(f"Failed to send WhatsApp: {str(e)}", "Purchase Order WhatsApp")
-
-	def _build_whatsapp_message(self, old_status=None):
-		"""Build WhatsApp message text"""
-		status_emoji = {
-			'New': '🆕',
-			'Ordered': '📦',
-			'Received': '✅',
-			'Core Returned': '♻️',
-			'Cancelled': '❌'
-		}
-		emoji = status_emoji.get(self.status, '📋')
-		lines = [
-			f"{emoji} *PO {self.name}* — {self.status}",
-			f"",
-			f"📋 *{self.item_name}*",
-			f"P/N: {self.part_number}",
-			f"Qty: {self.quantity}",
-			f"✈️ {self.aircraft or 'N/A'}",
-		]
-		if self.urgency == 'AOG':
-			lines.append(f"🚨 *AOG — Aircraft on Ground*")
-		if self.supplier:
-			supplier_name = frappe.db.get_value('Supplier', self.supplier, 'supplier_name') or self.supplier
-			lines.append(f"🏭 {supplier_name}")
-		if self.notes:
-			notes_short = self.notes[:200] + ('...' if len(self.notes) > 200 else '')
-			lines.append(f"📝 {notes_short}")
-		if self.status == 'Core Returned' and self.core_return_supplier:
-			supplier_name = frappe.db.get_value('Supplier', self.core_return_supplier, 'supplier_name') or self.core_return_supplier
-			lines.append(f"♻️ Core returned to {supplier_name} on {self.core_return_date or today()}")
-		return '\n'.join(lines)
-
-	def _get_notification_recipients(self):
-		"""Get email recipients — sends to Noa's email for WhatsApp relay"""
-		return ['noa992250@gmail.com']
+		if self.status == 'Core Returned' and not self.core_return_date:
+			self.core_return_date = today()
 
 	def _auto_create_receiving(self):
 		"""Auto-create (idempotent) a Purchase Order Receiving record for this order."""
