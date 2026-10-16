@@ -37,14 +37,13 @@ class TestAMPDocument(IntegrationTestCase):
 		self.amp_doc.delete()
 
 	def test_duplicate_registration_validation(self):
-		self.amp_doc.registrations.append(
-			frappe._dict(
-				{
-					"registration": "4X-CUT",
-					"serial_number": "999999",
-					"active": 1,
-				}
-			)
+		self.amp_doc.append(
+			"registrations",
+			{
+				"registration": "4X-CUT",
+				"serial_number": "999999",
+				"active": 1,
+			},
 		)
 		self.assertRaises(frappe.exceptions.ValidationError, self.amp_doc.insert)
 
