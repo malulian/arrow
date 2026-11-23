@@ -364,7 +364,9 @@ def generate_monthly_aircraft_report(aircraft, year, month):
     t2.alignment = center
     ws2.row_dimensions[2].height = 20
 
-    h2 = ["מק״ט", "שם פריט", "כמות סה״כ", "מחיר יחידה (₪)", "עלות סה״כ (₪)", "נצרך בדוחות"]
+    # Currency of the price columns — site currency (System Settings), never hardcoded
+    currency = frappe.db.get_single_value("System Settings", "currency") or "USD"
+    h2 = ["מק״ט", "שם פריט", "כמות סה״כ", f"מחיר יחידה ({currency})", f"עלות סה״כ ({currency})", "נצרך בדוחות"]
     hr2 = 3
     for col, h in enumerate(h2, start=1):
         cell = ws2.cell(row=hr2, column=col, value=h)

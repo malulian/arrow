@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import today, now_datetime, time_diff_in_hours, get_time
+from frappe.utils import today, now_datetime, time_diff_in_hours, get_time, fmt_money
 
 
 class WorkReport(Document):
@@ -23,6 +23,23 @@ class WorkReport(Document):
 		self.validate_parts_availability()
 		self.check_duplicate_parts()
 	
+	def get_currency(self):
+		"""Currency of the money figures printed on this report.
+
+		Read from System Settings (the site currency) instead of hardcoding a
+		symbol: the same template runs on sites whose currency is not ILS, and a
+		hardcoded symbol on a USD site under-states every part price.
+		"""
+		return (
+			frappe.db.get_single_value("System Settings", "currency")
+			or frappe.db.get_default("currency")
+			or "USD"
+		)
+
+	def money(self, amount, currency=None):
+		"""Format an amount with the site currency symbol, e.g. '$ 3,300.00'."""
+		return fmt_money(amount or 0, currency=currency or self.get_currency())
+
 	def calculate_part_line_totals(self):
 		"""Calculate line_total for each part used"""
 		if not self.parts_used:
@@ -284,6 +301,9 @@ class WorkReport(Document):
 		
 		# Get technician full name
 		technician_name = frappe.db.get_value('User', self.technician, 'full_name') or self.technician
+
+		# Currency of every money figure below (email + PDF) — site currency, never hardcoded
+		currency = self.get_currency()
 		
 		# Build parts list HTML (with prices)
 		parts_html = ""
@@ -299,8 +319,8 @@ class WorkReport(Document):
 				unit_price = part.unit_price or 0
 				line_total = part.line_total or (unit_price * quantity)
 				grand_total += line_total
-				parts_html += f"<tr><td>{part_number}</td><td>{quantity}</td><td>₪{unit_price:,.2f}</td><td>₪{line_total:,.2f}</td></tr>"
-			parts_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים:</td><td>₪{grand_total:,.2f}</td></tr>'
+				parts_html += f"<tr><td>{part_number}</td><td>{quantity}</td><td>{self.money(unit_price, currency)}</td><td>{self.money(line_total, currency)}</td></tr>"
+			parts_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים: ({currency})</td><td>{self.money(grand_total, currency)}</td></tr>'
 			parts_html += "</table>"
 		else:
 			parts_html = "<p>לא נצרכו חלקים</p>"
@@ -319,7 +339,7 @@ class WorkReport(Document):
 			<p>חלקים שנצרכו:</p>
 			{parts_html}
 			
-			<p><strong>סה"כ עלות חלקים: ₪{grand_total:,.2f}</strong></p>
+			<p><strong>סה"כ עלות חלקים: {self.money(grand_total, currency)} ({currency})</strong></p>
 			
 			<p>מצורף דוח העבודה ב-PDF.</p>
 			
@@ -364,8 +384,8 @@ class WorkReport(Document):
 					p_qty = part.quantity_used or 0
 					p_line_total = part.line_total or (p_unit_price * p_qty)
 					pdf_grand_total += p_line_total
-					parts_pdf_html += f"<tr><td>{part.part_number or 'N/A'}</td><td>{p_qty}</td><td>₪{p_unit_price:,.2f}</td><td>₪{p_line_total:,.2f}</td></tr>"
-				parts_pdf_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים:</td><td>₪{pdf_grand_total:,.2f}</td></tr>'
+					parts_pdf_html += f"<tr><td>{part.part_number or 'N/A'}</td><td>{p_qty}</td><td>{self.money(p_unit_price, currency)}</td><td>{self.money(p_line_total, currency)}</td></tr>"
+				parts_pdf_html += f'<tr style="font-weight: bold; background: #e8f5e9;"><td colspan="3">סה"כ חלקים: ({currency})</td><td>{self.money(pdf_grand_total, currency)}</td></tr>'
 				parts_pdf_html += "</table>"
 			else:
 				parts_pdf_html = "<p>לא נצרכו חלקים</p>"
